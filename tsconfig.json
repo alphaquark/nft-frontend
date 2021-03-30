@@ -1,26 +1,38 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "es6",
+        "lib": ["dom", "dom.iterable", "es6", "scripthost", "webworker", "es5", "es7", "es2017", "es2020"],
+        "types": ["node", "jest", "webpack-env"],
+        "jsx": "react-jsx",
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "allowJs": true,
+        "baseUrl": "./",
+        "strict": false,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "typeRoots": ["./node_modules/@types"],
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true
+    },
+    "exclude": [
+        "node_modules",
+        "public",
+        "mocks",
+        "__mocks__",
+        "scripts",
+        "spec",
+        "jest.config.js",
+        "webpack",
+        "./src/*.test.*",
+        "./src/charting_library"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
+    "include": ["src"]
 }
