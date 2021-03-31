@@ -15,13 +15,14 @@ const ButtonWrapper = styled.button`
     ${({ variant }) => {
         switch (variant) {
             case 'primary':
-                return `background-color: #564FF5; color:white;`;
+                return `background-color: #564FF5; color:white!important;`;
             case 'secondary':
-                return `border: 1px solid #564FF5; background-color:white; color:#564FF5`;
+                return `border: 1px solid #564FF5; background-color:white; color:#564FF5!important;`;
             default:
                 return `background-color: white`;
         }
     }};
     min-height: 40px;
     line-height: 40px;
+    min-width: 160px;
 `;

@@ -37,6 +37,16 @@ const WalletScreen = ({ account, seaport }) => {
         }
     }, [account, seaport]);
 
+    const handleSelectedButton = () => {
+        if (selected) {
+            return (
+                <Button onClick={() => setSelected(null)} variant="secondary">
+                    Cancel
+                </Button>
+            );
+        }
+    };
+
     const handleSubmit = async () => {
         try {
             setDisabled(true);
@@ -60,56 +70,86 @@ const WalletScreen = ({ account, seaport }) => {
         setSelected(i);
     };
 
-    return !error ? (
-        loading ? (
-            <div>loading</div>
-        ) : (
-            <React.Fragment>
-                <div>
-                    <PerfectScrollbar>
-                        <FlexWrapper>
-                            {assets?.map((asset: any, i: number) => (
-                                <OrderWrapper index={i} selected={selected}>
-                                    <Order
-                                        key={i}
-                                        order={{ asset }}
-                                        seaport={seaport}
-                                        accountAddress={account}
-                                        onClick={() => handleSelected(i, asset)}
-                                    />
-                                </OrderWrapper>
-                            ))}
-                        </FlexWrapper>
-                    </PerfectScrollbar>
-                    <div>
-                        <Button onClick={() => setModalState(!modalState)} variant="primary">
-                            Sell
-                        </Button>
-                        <Button variant="secondary">Cancel</Button>
-                    </div>
-                </div>
-                {modalState && (
-                    <Modal
-                        header={<div>1</div>}
-                        body={
-                            <div>
-                                <input type="number" value={amount} onChange={(e) => setAmount(+e.target.value)} />
-                            </div>
-                        }
-                        width={500}
-                        close={() => setModalState(!modalState)}
-                        closeLabel={'close'}
-                        submit={handleSubmit}
-                        submitLabel={'ok'}
-                        buttonDisabled={disabled}
-                    />
-                )}
-            </React.Fragment>
-        )
-    ) : (
-        <div>error!</div>
+    return (
+        <WalletScreenWrapper>
+            <div>My NFTs</div>
+            {!error ? (
+                loading ? (
+                    <div>loading</div>
+                ) : (
+                    <React.Fragment>
+                        <div>
+                            <PerfectScrollbar>
+                                <FlexWrapper>
+                                    {assets?.map((asset: any, i: number) => (
+                                        <OrderWrapper index={i} selected={selected}>
+                                            <Order
+                                                key={i}
+                                                order={{ asset }}
+                                                seaport={seaport}
+                                                accountAddress={account}
+                                                onClick={() => handleSelected(i, asset)}
+                                            />
+                                        </OrderWrapper>
+                                    ))}
+                                </FlexWrapper>
+                            </PerfectScrollbar>
+                            <ButtonWrapper>
+                                <Button onClick={() => setModalState(!modalState)} variant="primary">
+                                    Sell
+                                </Button>
+                                {handleSelectedButton()}
+                            </ButtonWrapper>
+                        </div>
+                        {modalState && (
+                            <Modal
+                                header={<div>1</div>}
+                                body={
+                                    <div>
+                                        <input
+                                            type="number"
+                                            value={amount}
+                                            onChange={(e) => setAmount(+e.target.value)}
+                                        />
+                                    </div>
+                                }
+                                width={500}
+                                close={() => setModalState(!modalState)}
+                                closeLabel={'close'}
+                                submit={handleSubmit}
+                                submitLabel={'ok'}
+                                buttonDisabled={disabled}
+                            />
+                        )}
+                    </React.Fragment>
+                )
+            ) : (
+                <div>error!</div>
+            )}
+        </WalletScreenWrapper>
     );
 };
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    margin-left: auto;
+    justify-content: flex-end;
+    grid-gap: 14px;
+`;
+
+const WalletScreenWrapper = styled.div`
+    * {
+        color: white;
+    }
+    > div:first-child {
+        border-bottom: 1px solid #efefef;
+        margin-bottom: 30px;
+        font-weight: 500;
+        font-size: 18px;
+        padding-left: 25px;
+        padding-bottom: 18px;
+    }
+`;
 
 const OrderWrapper = styled.div`
     ${({ selected, index }) => selected === index && `box-shadow: inset 0 0 0 2px #5d63ff;`}

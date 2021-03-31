@@ -1,5 +1,5 @@
 import React from 'react';
-import { connectWallet, PRODUCT_CONTRACT, toUnitAmount } from '../../constant';
+import { connectWallet, toUnitAmount } from '../../constant';
 import { useLocation } from 'react-router';
 import { QUERY_SAMPLE } from 'src/gql';
 import { useLazyQuery } from '@apollo/client';
@@ -30,6 +30,7 @@ const OrderScreen = ({ account, seaport }) => {
     React.useEffect(() => {
         setPath({ assetContractAddress: location.pathname.split('/')[2], tokenId: location.pathname.split('/')[3] });
         call();
+        console.log('ccaalll');
     }, [location, call]);
 
     React.useEffect(() => {
@@ -60,7 +61,7 @@ const OrderScreen = ({ account, seaport }) => {
             };
             asyncFunction();
         }
-    }, [account, seaport, path, count, asset]);
+    }, [account, seaport, path, count]);
 
     const fulfillOrder = async () => {
         const { asset, assetBundle } = orders;
@@ -89,9 +90,6 @@ const OrderScreen = ({ account, seaport }) => {
             <div>loading</div>
         ) : (
             <div className="App">
-                <div>asset_contract_address: {PRODUCT_CONTRACT}</div>
-                <div>current_account_address: {account}</div>
-                <div>{count}</div>
                 {asset && (
                     <React.Fragment>
                         <div>{asset?.name}</div>

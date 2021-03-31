@@ -13,16 +13,16 @@ export interface OrderProps {
 
 export const Order: React.FC<OrderProps> = ({ order, onClick }) => {
     const { asset } = order;
-    const { imageUrl, tokenId, name, tokenAddress, sellOrders } = asset;
+    const { imageUrl, name, sellOrders } = asset;
     // const owner = asset ? asset.owner : assetBundle.assets[0].owner;
     return (
         <OrderWrapper onClick={onClick}>
             <div>
                 <img src={imageUrl} alt="img" />
             </div>
-            <div>{sellOrders ? (sellOrders?.length ? '판매중' : '대기중') : null}</div>
+
             <div>
-                <div>{`${tokenId} ${tokenAddress}`}</div>
+                {/* <div>{`${tokenId} ${tokenAddress}`}</div> */}
                 <div>{name}</div>
                 {order?.currentPrice && (
                     <div>{`${toUnitAmount(order?.currentPrice, order?.paymentTokenContract).toString()} ${
@@ -34,6 +34,7 @@ export const Order: React.FC<OrderProps> = ({ order, onClick }) => {
                 {/* <div>{side}</div> */}
                 {/* <div>{JSON.stringify(owner)}</div> */}
             </div>
+            <div>{sellOrders ? (sellOrders?.length ? '판매중' : '대기중') : null}</div>
         </OrderWrapper>
     );
 };
@@ -46,7 +47,9 @@ const OrderWrapper = styled.div`
         color: white;
     }
     flex: 1;
-    max-width: 254px;
+    max-width: 255px;
+    min-width: 255px;
+    min-height: 356px;
     > div:first-child {
     }
     > div:last-child {

@@ -15,6 +15,29 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 export const GlobalStyle = createGlobalStyle`
   @import url("https://fonts.googleapis.com/css?family=Roboto");
+  @keyframes marquee-scroll {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ps__rail-x{
+  background: #efefef!important;
+  opacity:1!important;
+  height:4px!important;
+  display:block!important;
+  width:100%!important;
+
+}
+.ps__thumb-x{
+  height:4px!important;
+  background:#5D63FF!important;
+  bottom:0!important;
+  cursor:pointer;
+
+}
   ${normalize}
   html, body{
     background: #171734;
