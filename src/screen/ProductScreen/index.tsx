@@ -151,6 +151,7 @@ const BannerContainer = styled.div`
     > div:first-child {
         font-size: 28px;
         line-height: 30px;
+        font-weight: bold;
     }
     > div:nth-child(2) {
         font-size: 16px;

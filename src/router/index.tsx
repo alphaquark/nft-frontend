@@ -8,7 +8,7 @@ import { Footer, Header } from 'src/components';
 import { promisify } from 'src/constant';
 import { useSeaportFetch } from 'src/hooks';
 import { selectSeaport } from 'src/modules';
-import { OrderScreen, ProductScreen, WalletScreen, LandingScreen } from '../screen';
+import { OrderScreen, ProductScreen, WalletScreen, LandingScreen, AboutScreen } from 'src/screen';
 
 // const renderLoader = () => <div className="pg-loader-container">...</div>;
 
@@ -114,6 +114,7 @@ export const Router: React.FC = (props) => {
                 path="/detail/:addreess/:id"
                 render={() => <WrappedScreen component={OrderScreen} account={account} seaport={seaport} />}
             />
+            <Route exact={true} path="/about" component={AboutScreen} />
             <Route
                 exact={true}
                 path="/product"

@@ -3,6 +3,8 @@ import { connectWallet, toUnitAmount } from '../../constant';
 import { useLocation } from 'react-router';
 import { QUERY_SAMPLE } from 'src/gql';
 import { useLazyQuery } from '@apollo/client';
+import styled from 'styled-components';
+import { Button } from 'src/components';
 
 const OrderScreen = ({ account, seaport }) => {
     const [orders, setOrders] = React.useState<any>(null);
@@ -15,6 +17,7 @@ const OrderScreen = ({ account, seaport }) => {
         assetContractAddress: '',
         tokenId: '',
     });
+    const [owner, setOwner] = React.useState<boolean>(false);
     const location = useLocation();
 
     const [call, { loading: queryLoading, data: queryData }] = useLazyQuery(QUERY_SAMPLE, {
@@ -23,14 +26,13 @@ const OrderScreen = ({ account, seaport }) => {
 
     React.useEffect(() => {
         if (!queryLoading) {
-            console.log(queryData);
+            // console.log(queryData);
         }
     }, [queryData, queryLoading]);
 
     React.useEffect(() => {
         setPath({ assetContractAddress: location.pathname.split('/')[2], tokenId: location.pathname.split('/')[3] });
         call();
-        console.log('ccaalll');
     }, [location, call]);
 
     React.useEffect(() => {
@@ -50,6 +52,8 @@ const OrderScreen = ({ account, seaport }) => {
                         token_id: path.tokenId,
                         side: 1,
                     });
+
+                    setOwner(account && account.toLowerCase() === asset.owner.address.toLowerCase());
                     setAsset(asset);
                     setOrders(orders);
                     setCount(count);
@@ -85,48 +89,161 @@ const OrderScreen = ({ account, seaport }) => {
             setOrdering(false);
         }
     };
-    return !error ? (
-        loading ? (
-            <div>loading</div>
-        ) : (
-            <div className="App">
-                {asset && (
+
+    return (
+        <OrderScreenWrapper>
+            {!error ? (
+                loading ? (
+                    <div>loading</div>
+                ) : (
                     <React.Fragment>
-                        <div>{asset?.name}</div>
-                        <div>{asset?.tokenId}</div>
-                        <div>{asset?.imageUrl}</div>
-                        <div>{orders?.side}</div>
-                        <div>{JSON.stringify(asset?.owner)}</div>
-                        <div>
-                            {orders?.length && (
-                                <button disabled={ordering} onClick={fulfillOrder}>
-                                    {ordering
-                                        ? 'ordered'
-                                        : `${toUnitAmount(
-                                              orders[0]?.currentPrice,
-                                              orders[0]?.paymentTokenContract
-                                          )?.toString()}
+                        {asset && (
+                            <BannerWrapper>
+                                <div>
+                                    <div>
+                                        <img src={asset?.imageUrl} alt={asset?.imageUrl} />
+                                    </div>
+                                    <div>
+                                        <div>{asset?.name}</div>
+                                        <div>
+                                            {orders?.length ? (
+                                                <div>
+                                                    <div>
+                                                        <div>PRICE</div>
+                                                        <div>
+                                                            {ordering
+                                                                ? 'ordered'
+                                                                : `${toUnitAmount(
+                                                                      orders[0]?.currentPrice,
+                                                                      orders[0]?.paymentTokenContract
+                                                                  )?.toString()}
                         ${orders[0]?.paymentTokenContract?.symbol}`}
-                                </button>
-                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="btnWrapper">
+                                                        {!owner ? (
+                                                            <Button
+                                                                variant={'primary'}
+                                                                disabled={ordering}
+                                                                onClick={fulfillOrder}>
+                                                                Buy Order
+                                                            </Button>
+                                                        ) : (
+                                                            <Button variant="secondary">My Asset</Button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <div className="btnWrapper">
+                                                        <Button variant={'secondary'} disabled={true}>
+                                                            CLOSED
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </BannerWrapper>
+                        )}
+                        <InformationWrapper>
+                            <div>Information</div>
+                            <div>{asset?.description}</div>
+                        </InformationWrapper>
+                        {/* need colume reverse */}
+                        <div>
+                            {queryData?.assetEvents?.edges.map(({ node }, i) => {
+                                return (
+                                    <div key={`${node.id}i`}>
+                                        <div>{node?.eventType}</div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </React.Fragment>
-                )}
-                {/* need colume reverse */}
-                <div>
-                    {queryData?.assetEvents?.edges.map(({ node }, i) => {
-                        return (
-                            <div key={`${node.id}i`}>
-                                <div>{node?.eventType}</div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        )
-    ) : (
-        <div>error!</div>
+                )
+            ) : (
+                <div>error!</div>
+            )}
+        </OrderScreenWrapper>
     );
 };
+
+const InformationWrapper = styled.div`
+    margin-top: 97px;
+    margin-bottom: 87px;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 22px;
+    > div:first-child {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 21px;
+    }
+    > div:last-child {
+        font-size: 14px;
+        line-height: 26px;
+        opacity: 0.5;
+    }
+`;
+
+const OrderScreenWrapper = styled.div`
+    * {
+        color: white;
+    }
+`;
+
+const BannerWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    > div {
+        margin: auto;
+        max-width: 935px;
+        min-width: 935px;
+        padding: 32px;
+        background: #242448;
+        display: flex;
+        grid-gap: 49px;
+        img {
+            min-width: 320px;
+            max-width: 320px;
+            min-height: 320px;
+            max-height: 320px;
+        }
+        > div:last-child {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            > div:first-child {
+                font-weight: 500;
+                font-size: 22px;
+                line-height: 26px;
+                margin-bottom: 34px;
+            }
+            > div:nth-child(2) {
+                display: flex;
+                flex: 1;
+                > div {
+                    flex: 1;
+                }
+                > div:last-child {
+                    display: flex;
+                    flex-direction: column;
+                    > div {
+                        display: flex;
+                        > div:last-child {
+                            margin-left: auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .btnWrapper {
+        margin-top: auto;
+        margin-left: auto;
+    }
+`;
 
 export { OrderScreen };

@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 const Web3 = require('web3');
 
-export const PRODUCT_CONTRACT = '0x30736cddded53920cdbf6dabfd3067c4dc2f5475';
+export const PRODUCT_CONTRACT = '0x3241b3eb213cdcad0c5ab3858b5875b0567f7b8f';
 
 export const DEFAULT_DECIMALS = 18;
 export let web3Provider =

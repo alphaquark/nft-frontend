@@ -71,13 +71,13 @@ const WalletScreen = ({ account, seaport }) => {
     };
 
     return (
-        <WalletScreenWrapper>
-            <div>My NFTs</div>
-            {!error ? (
-                loading ? (
-                    <div>loading</div>
-                ) : (
-                    <React.Fragment>
+        <React.Fragment>
+            <WalletScreenWrapper>
+                <div>My NFTs</div>
+                {!error ? (
+                    loading ? (
+                        <div>loading</div>
+                    ) : (
                         <div>
                             <PerfectScrollbar>
                                 <FlexWrapper>
@@ -101,32 +101,28 @@ const WalletScreen = ({ account, seaport }) => {
                                 {handleSelectedButton()}
                             </ButtonWrapper>
                         </div>
-                        {modalState && (
-                            <Modal
-                                header={<div>1</div>}
-                                body={
-                                    <div>
-                                        <input
-                                            type="number"
-                                            value={amount}
-                                            onChange={(e) => setAmount(+e.target.value)}
-                                        />
-                                    </div>
-                                }
-                                width={500}
-                                close={() => setModalState(!modalState)}
-                                closeLabel={'close'}
-                                submit={handleSubmit}
-                                submitLabel={'ok'}
-                                buttonDisabled={disabled}
-                            />
-                        )}
-                    </React.Fragment>
-                )
-            ) : (
-                <div>error!</div>
+                    )
+                ) : (
+                    <div>error!</div>
+                )}
+            </WalletScreenWrapper>
+            {modalState && (
+                <Modal
+                    header={<div>1</div>}
+                    body={
+                        <div>
+                            <input type="number" value={amount} onChange={(e) => setAmount(+e.target.value)} />
+                        </div>
+                    }
+                    width={500}
+                    close={() => setModalState(!modalState)}
+                    closeLabel={'close'}
+                    submit={handleSubmit}
+                    submitLabel={'ok'}
+                    buttonDisabled={disabled}
+                />
             )}
-        </WalletScreenWrapper>
+        </React.Fragment>
     );
 };
 
