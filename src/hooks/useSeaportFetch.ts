@@ -14,6 +14,7 @@ export const useSeaportFetch = () => {
                 seaportData(
                     new OpenSeaPort(web3Provider, {
                         networkName: Network.Rinkeby,
+                        apiKey: '11671121b01f4beb9317229a88785834',
                     })
                 )
             );

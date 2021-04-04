@@ -24,17 +24,17 @@ export const Header: React.FC<HeaderProps> = ({ background }) => {
                     <div>
                         <div>
                             <div>EN</div>
-                            <div>KRW</div>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div>
+                    <div onClick={() => history.push('/')}>
                         <img src={AQTLogo} alt="aqt" />
                     </div>
                     <ul>
                         <li onClick={() => history.push('/about')}>ABOUT</li>
                         <li onClick={() => history.push('/')}>NFT</li>
+                        <li onClick={() => history.push('/')}>IP-Fi</li>
                         <li onClick={() => history.push('/product')}>MARKETPLACE</li>
                         <li onClick={() => history.push('/')}>DOCS</li>
                         <li>

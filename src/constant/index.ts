@@ -30,7 +30,6 @@ export async function connectWallet() {
 
 export function toUnitAmount(baseAmount: any, tokenContract: any): BigNumber {
     const decimals = tokenContract && tokenContract.decimals != null ? tokenContract.decimals : DEFAULT_DECIMALS;
-    console.log(baseAmount, tokenContract);
     if (!baseAmount || !tokenContract) {
         return undefined;
     }

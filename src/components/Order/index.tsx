@@ -34,7 +34,16 @@ export const Order: React.FC<OrderProps> = ({ order, onClick }) => {
                 {/* <div>{side}</div> */}
                 {/* <div>{JSON.stringify(owner)}</div> */}
             </div>
-            <div>{sellOrders ? (sellOrders?.length ? '판매중' : '대기중') : null}</div>
+            <div>
+                {sellOrders
+                    ? sellOrders?.length
+                        ? `판매중 ${toUnitAmount(
+                              sellOrders?.length && sellOrders[0]?.currentPrice,
+                              sellOrders?.length && sellOrders[0]?.paymentTokenContract
+                          )?.toString()} ${sellOrders[0]?.paymentTokenContract?.symbol}`
+                        : '대기중'
+                    : null}
+            </div>
         </OrderWrapper>
     );
 };

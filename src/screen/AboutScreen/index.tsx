@@ -11,6 +11,21 @@ import Triangle from 'src/assets/triangle.svg';
 import Holding from 'src/assets/holding.svg';
 import Convert from 'src/assets/convert.svg';
 import Doughnut from 'src/assets/doughnut.svg';
+import Bithumb from 'src/assets/partner/bithumb.svg';
+import FM from 'src/assets/partner/fm.svg';
+import GateIO from 'src/assets/partner/gateio.svg';
+import GoPAX from 'src/assets/partner/gopax.svg';
+import KMGA from 'src/assets/partner/kmga.svg';
+import PayProtocol from 'src/assets/partner/payprotocols.svg';
+import Upbit from 'src/assets/partner/upbit.svg';
+import Wiprex from 'src/assets/partner/wiprex.svg';
+import WXY from 'src/assets/partner/wxy.svg';
+import Back from 'src/assets/member/back.svg';
+import Daniel from 'src/assets/member/daniel.svg';
+import Kyle from 'src/assets/member/kyle.svg';
+import Kyung from 'src/assets/member/kyung.svg';
+import Lucia from 'src/assets/member/lucia.svg';
+import Terry from 'src/assets/member/terry.svg';
 
 const STATIC_DATA = [
     { name: 'Private sale', value: '21.61' },
@@ -155,6 +170,104 @@ export const AboutScreen = () => {
                             <img src={Translate} alt="translate" />
                         </div>
                     </TranslateWrapper>
+                    <PartnerWrapper>
+                        <div>
+                            <div>Crypto Exchange Partners</div>
+                            <div>
+                                <div>
+                                    <img src={Bithumb} alt="bithumb" />
+                                </div>
+                                <div>
+                                    <img src={Upbit} alt="Upbit" />
+                                </div>
+                                <div>
+                                    <img src={GateIO} alt="GateIO" />
+                                </div>
+                                <div>
+                                    <img src={GoPAX} alt="GoPAX" />
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>Partners</div>
+                            <div>
+                                <div>
+                                    <img src={PayProtocol} alt="PayProtocol" />
+                                </div>
+                                <div>
+                                    <img src={Wiprex} alt="Wiprex" />
+                                </div>
+                                <div>
+                                    <img src={WXY} alt="WXY" />
+                                </div>
+                                <div>
+                                    <img src={FM} alt="FM" />
+                                </div>
+                                <div>
+                                    <img src={KMGA} alt="KMGA" />
+                                </div>
+                            </div>
+                        </div>
+                    </PartnerWrapper>
+                    <TeamWrapper>
+                        <div>Team</div>
+                        <div>
+                            <div>
+                                <div>
+                                    <img src={Terry} alt="Terry" />
+                                </div>
+                                <div>
+                                    <div>Terry Kim</div>
+                                    <div>Chief Executive Officer</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Kyle} alt="Kyle" />
+                                </div>
+                                <div>
+                                    <div>Kyle Kim</div>
+                                    <div>Chief Operating Officer</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Back} alt="Back" />
+                                </div>
+                                <div>
+                                    <div>Seung Hoon Back</div>
+                                    <div>Chief Technology Officer</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Kyung} alt="Kyung" />
+                                </div>
+                                <div>
+                                    <div>Kyoung Young Lee</div>
+                                    <div>Chief Information Security Officer</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Lucia} alt="Lucia" />
+                                </div>
+                                <div>
+                                    <div>Lucia Lim</div>
+                                    <div>Chief Marketing Officer</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Daniel} alt="Daniel" />
+                                </div>
+                                <div>
+                                    <div>Daniel No</div>
+                                    <div>Research Analyst</div>
+                                </div>
+                            </div>
+                        </div>
+                    </TeamWrapper>
                     <TokenInfoWrapper>
                         <div>Alpha Quark Token Info</div>
                         <div>
@@ -207,6 +320,82 @@ export const AboutScreen = () => {
         </React.Fragment>
     );
 };
+
+const TeamWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    grid-gap: 100px;
+    margin: 230px 0;
+
+    > div {
+        display: flex;
+    }
+    > div:first-child {
+        margin: auto;
+        font-size: 28px;
+        line-height: 30px;
+        text-align: center;
+        color: #ffffff;
+        font-weight: bold;
+    }
+    > div:last-child {
+        display: flex;
+        flex-wrap: wrap;
+        grid-gap: 60px;
+        max-width: 910px;
+        margin: auto;
+        > div {
+            display: flex;
+            flex-direction: column;
+            flex: 0;
+            margin: auto;
+            flex-wrap: wrap;
+            grid-gap: 34px;
+            > div:last-child {
+                display: flex;
+                flex-direction: column;
+                grid-gap: 12px;
+                > div:last-child {
+                    font-size: 16px;
+                    line-height: 18px;
+                    text-align: center;
+                    letter-spacing: 0.03em;
+                    color: #9d91d0;
+                }
+                * {
+                    text-align: center;
+                    font-size: 20px;
+                    line-height: 23px;
+                    text-align: center;
+                    letter-spacing: -0.01em;
+                }
+            }
+        }
+    }
+`;
+
+const PartnerWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    grid-gap: 150px;
+    > div {
+        display: flex;
+        flex-direction: column;
+        grid-gap: 64px;
+        > div:first-child {
+            font-weight: bold;
+            font-size: 28px;
+            line-height: 30px;
+            text-align: center;
+            color: #ffffff;
+        }
+        > div:last-child {
+            display: flex;
+            margin: auto;
+            grid-gap: 20px;
+        }
+    }
+`;
 
 const ContactWrapper = styled.div`
     display: flex;

@@ -89,15 +89,19 @@ const ProductScreen = ({ account, seaport }) => {
                     <React.Fragment>
                         <PerfectScrollbar>
                             <FlexWrapper>
-                                {orders?.map((order: any, i: number) => (
-                                    <Order
-                                        key={i}
-                                        order={{ asset: order }}
-                                        seaport={seaport}
-                                        accountAddress={account}
-                                        onClick={() => history.push(`/detail/${order.tokenAddress}/${order.tokenId}`)}
-                                    />
-                                ))}
+                                {orders
+                                    ?.filter((e) => e.sellOrders?.length !== 0)
+                                    .map((order: any, i: number) => (
+                                        <Order
+                                            key={i}
+                                            order={{ asset: order }}
+                                            seaport={seaport}
+                                            accountAddress={account}
+                                            onClick={() =>
+                                                history.push(`/detail/${order.tokenAddress}/${order.tokenId}`)
+                                            }
+                                        />
+                                    ))}
                             </FlexWrapper>
                         </PerfectScrollbar>
                         <MusicContainer>

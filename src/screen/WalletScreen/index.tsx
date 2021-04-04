@@ -108,7 +108,7 @@ const WalletScreen = ({ account, seaport }) => {
             </WalletScreenWrapper>
             {modalState && (
                 <Modal
-                    header={<div>1</div>}
+                    header={<div>Checkout</div>}
                     body={
                         <div>
                             <input type="number" value={amount} onChange={(e) => setAmount(+e.target.value)} />

@@ -1,10 +1,12 @@
 import React from 'react';
-import { connectWallet, toUnitAmount } from '../../constant';
-import { useLocation } from 'react-router';
-import { QUERY_SAMPLE } from 'src/gql';
 import { useLazyQuery } from '@apollo/client';
 import styled from 'styled-components';
-import { Button } from 'src/components';
+import { useLocation } from 'react-router';
+
+import { connectWallet, promisify, toUnitAmount } from 'src/constant';
+import { QUERY_SAMPLE } from 'src/gql';
+import { Button, Modal } from 'src/components';
+import ERC20 from 'src/abi/erc20.json';
 
 const OrderScreen = ({ account, seaport }) => {
     const [orders, setOrders] = React.useState<any>(null);
@@ -18,6 +20,12 @@ const OrderScreen = ({ account, seaport }) => {
         tokenId: '',
     });
     const [owner, setOwner] = React.useState<boolean>(false);
+    const [balance, setBalance] = React.useState<{ eth: string; target: { id: ''; address: ''; balance: '' } }>({
+        eth: '',
+        target: { id: '', address: '', balance: '' },
+    });
+    const [modalState, setModalState] = React.useState<boolean>(false);
+
     const location = useLocation();
 
     const [call, { loading: queryLoading, data: queryData }] = useLazyQuery(QUERY_SAMPLE, {
@@ -53,7 +61,24 @@ const OrderScreen = ({ account, seaport }) => {
                         side: 1,
                     });
 
+                    const promiseBalance = promisify((cb) => seaport.web3.eth.getBalance(account, cb));
+
+                    const erc20 = seaport.web3.eth
+                        .contract(ERC20)
+                        .at(orders[0]?.paymentTokenContract.address || '0x0000000000000000000000000000000000000000');
+                    const balance: any = await promiseBalance;
+                    const promiseTokenBalance = promisify((cb) => erc20.balanceOf(account, cb));
+                    const tokenBalance: any = await promiseTokenBalance;
+
                     setOwner(account && account.toLowerCase() === asset.owner.address.toLowerCase());
+                    setBalance({
+                        eth: balance.toString(),
+                        target: {
+                            id: orders[0]?.paymentTokenContract.symbol,
+                            address: orders[0]?.paymentTokenContract.address,
+                            balance: tokenBalance.toString(),
+                        },
+                    });
                     setAsset(asset);
                     setOrders(orders);
                     setCount(count);
@@ -68,8 +93,9 @@ const OrderScreen = ({ account, seaport }) => {
     }, [account, seaport, path, count]);
 
     const fulfillOrder = async () => {
-        const { asset, assetBundle } = orders;
+        const { asset, assetBundle } = orders[0];
         const owner = asset ? asset.owner : assetBundle.assets[0].owner;
+
         if (!account) {
             await connectWallet();
         }
@@ -82,14 +108,13 @@ const OrderScreen = ({ account, seaport }) => {
             if (!seaport || !account) {
                 throw new Error('error');
             }
-            await seaport.fulfillOrder({ order: orders, accountAddress: account });
+            await seaport.fulfillOrder({ order: orders[0], accountAddress: account });
         } catch (error) {
             alert(error);
         } finally {
             setOrdering(false);
         }
     };
-
     return (
         <OrderScreenWrapper>
             {!error ? (
@@ -97,6 +122,32 @@ const OrderScreen = ({ account, seaport }) => {
                     <div>loading</div>
                 ) : (
                     <React.Fragment>
+                        {modalState && (
+                            <Modal
+                                header={<ModalHeader>SWAP to {balance.target.id}</ModalHeader>}
+                                body={
+                                    <div>
+                                        <iframe
+                                            width="400"
+                                            height="500"
+                                            title={balance.target.address}
+                                            src={`https://app.uniswap.org/#/swap?outputCurrency=${
+                                                balance.target.address
+                                            }&theme=light&exactAmount=${toUnitAmount(
+                                                orders?.length && orders[0]?.currentPrice,
+                                                orders?.length && orders[0]?.paymentTokenContract
+                                            )?.toString()}&exactField=output`}
+                                        />
+                                    </div>
+                                }
+                                hiddenLabel={true}
+                                width={500}
+                                close={() => setModalState(!modalState)}
+                                closeLabel={'close'}
+                                submit={() => setModalState(!modalState)}
+                                submitLabel={'ok'}
+                            />
+                        )}
                         {asset && (
                             <BannerWrapper>
                                 <div>
@@ -109,24 +160,61 @@ const OrderScreen = ({ account, seaport }) => {
                                             {orders?.length ? (
                                                 <div>
                                                     <div>
-                                                        <div>PRICE</div>
                                                         <div>
-                                                            {ordering
-                                                                ? 'ordered'
-                                                                : `${toUnitAmount(
-                                                                      orders[0]?.currentPrice,
-                                                                      orders[0]?.paymentTokenContract
-                                                                  )?.toString()}
+                                                            <div>Balance</div>
+                                                            <div>
+                                                                <div>{`${+balance.eth / 1e18} ETH`}</div>
+                                                                {balance.target.id.toUpperCase() !== 'ETH' && (
+                                                                    <div>
+                                                                        <button
+                                                                            className="transfer"
+                                                                            onClick={() => setModalState(!modalState)}>
+                                                                            Transfer
+                                                                        </button>
+                                                                        <span>
+                                                                            {`${+balance.target.balance / 1e18} ${
+                                                                                balance.target.id
+                                                                            }`}
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div>PRICE</div>
+                                                            <div>
+                                                                {`${toUnitAmount(
+                                                                    orders[0]?.currentPrice,
+                                                                    orders[0]?.paymentTokenContract
+                                                                )?.toString()}
                         ${orders[0]?.paymentTokenContract?.symbol}`}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="btnWrapper">
                                                         {!owner ? (
                                                             <Button
-                                                                variant={'primary'}
-                                                                disabled={ordering}
+                                                                variant={ordering ? 'secondary' : 'primary'}
+                                                                disabled={
+                                                                    ordering ||
+                                                                    toUnitAmount(
+                                                                        orders?.length && orders[0]?.currentPrice,
+                                                                        orders?.length &&
+                                                                            orders[0]?.paymentTokenContract
+                                                                    )?.toString() >=
+                                                                        (+balance.target.balance / 1e18).toString()
+                                                                }
                                                                 onClick={fulfillOrder}>
-                                                                Buy Order
+                                                                {ordering
+                                                                    ? 'Processing...'
+                                                                    : toUnitAmount(
+                                                                          orders?.length && orders[0]?.currentPrice,
+                                                                          orders?.length &&
+                                                                              orders[0]?.paymentTokenContract
+                                                                      )?.toString() >=
+                                                                      (+balance.target.balance / 1e18).toString()
+                                                                    ? 'Insufficient balance'
+                                                                    : 'Buy Order'}
                                                             </Button>
                                                         ) : (
                                                             <Button variant="secondary">My Asset</Button>
@@ -151,16 +239,37 @@ const OrderScreen = ({ account, seaport }) => {
                             <div>Information</div>
                             <div>{asset?.description}</div>
                         </InformationWrapper>
-                        {/* need colume reverse */}
-                        <div>
-                            {queryData?.assetEvents?.edges.map(({ node }, i) => {
-                                return (
-                                    <div key={`${node.id}i`}>
-                                        <div>{node?.eventType}</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        <HistoryWrapper>
+                            <div>Trading History</div>
+                            <div>
+                                <div>
+                                    <div>Event</div>
+                                    <div>Date / Time</div>
+                                    <div>From</div>
+                                    <div>To</div>
+                                </div>
+                                <div>
+                                    {queryData?.assetEvents?.edges.map(({ node }, i) => {
+                                        return (
+                                            <div key={`${node.id}i`}>
+                                                <div>{node?.eventType}</div>
+                                                <div>{node?.eventTimestamp}</div>
+                                                <div>
+                                                    {node?.fromAccount?.address === account
+                                                        ? 'you'
+                                                        : node?.fromAccount?.address?.slice(0, 8)}
+                                                </div>
+                                                <div>
+                                                    {node?.toAccount?.address === account
+                                                        ? 'you'
+                                                        : node?.toAccount?.address?.slice(0, 8)}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </HistoryWrapper>
                     </React.Fragment>
                 )
             ) : (
@@ -169,6 +278,61 @@ const OrderScreen = ({ account, seaport }) => {
         </OrderScreenWrapper>
     );
 };
+
+const ModalHeader = styled.div`
+    color: black !important;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 23px;
+    * {
+        color: black !important;
+    }
+`;
+
+const HistoryWrapper = styled.div`
+    margin-top: 46px;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 16px;
+    > div:last-child {
+        border: 1px solid #5c5c71;
+        > div {
+            display: flex;
+            > div {
+                flex: 1;
+                display: flex;
+            }
+        }
+        > div:first-child {
+            border-bottom: 1px solid #5c5c71;
+            padding: 17px;
+        }
+        > div:last-child {
+            flex-direction: column;
+            > div:hover {
+                background: linear-gradient(90deg, rgba(93, 99, 255, 0.3) 0%, rgba(93, 99, 255, 0) 100%);
+            }
+            * {
+                font-size: 14px;
+                line-height: 16px;
+            }
+            > div {
+                display: flex;
+                padding: 17px;
+                border-bottom: 1px solid #5c5c71;
+                > div {
+                    flex: 1;
+                }
+            }
+            > div:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+    margin-bottom: 240px;
+`;
 
 const InformationWrapper = styled.div`
     margin-top: 97px;
@@ -197,6 +361,16 @@ const OrderScreenWrapper = styled.div`
 const BannerWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    .transfer {
+        border: none;
+        background: #564ff5;
+        border-radius: 100px;
+        color: white;
+        padding: 4px 10px;
+        line-height: 20px;
+        margin-right: 10px;
+        font-size: 13px;
+    }
     > div {
         margin: auto;
         max-width: 935px;
@@ -232,8 +406,26 @@ const BannerWrapper = styled.div`
                     flex-direction: column;
                     > div {
                         display: flex;
-                        > div:last-child {
-                            margin-left: auto;
+                        flex-direction: column;
+                        grid-gap: 18px;
+                        > div {
+                            display: Flex;
+                            > div:fist-child {
+                                font-size: 16px;
+                                line-height: 19px;
+
+                                color: #5d63ff;
+                            }
+                            > div:last-child {
+                                margin-left: auto;
+                                display: flex;
+                                flex-direction: column;
+                                grid-gap: 10px;
+                                * {
+                                    text-align: right;
+                                    font-weight: 500;
+                                }
+                            }
                         }
                     }
                 }

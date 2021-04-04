@@ -74,6 +74,7 @@ const authLink = setContext((_, { headers }) => {
         headers: {
             ...headers,
             authorization: Boolean(token) ? `JWT ${token}` : '',
+            'X-API-KEY': '11671121b01f4beb9317229a88785834',
         },
     };
 });
