@@ -6,7 +6,7 @@ export interface LanguageState {
 }
 
 const defaultLanguage = {
-    code: 'ko',
+    code: 'en',
 };
 
 const currentLang: string = localStorage.getItem('lang_type') || defaultLanguage.code;

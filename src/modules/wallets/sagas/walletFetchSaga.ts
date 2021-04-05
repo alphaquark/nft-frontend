@@ -9,7 +9,7 @@ export function* walletFetchSaga() {
     try {
         // const getUser = () => axios.get('http://0.0.0.0:9002/api/user/me');
         // const user = yield call(getUser);
-        yield put(walletData('hell'));
+        yield put(walletData('hello'));
     } catch (error) {
         yield put(walletError());
     }

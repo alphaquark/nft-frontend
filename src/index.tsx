@@ -4,14 +4,17 @@ import { normalize } from 'styled-normalize';
 import { createHttpLink, ApolloClient, from, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
-import ReactDOM from 'react-dom';
-import { App } from './App';
-import reportWebVitals from './reportWebVitals';
+import { render } from 'react-dom';
+import * as dotenv from 'dotenv';
 import { Provider } from 'react-redux';
+
+import { App } from './App';
+import { reportWebVitals } from './reportWebVitals';
 import { rootSaga } from './modules';
 import { sagaMiddleware, store } from './store';
-
 import 'react-perfect-scrollbar/dist/css/styles.css';
+
+dotenv.config();
 
 export const GlobalStyle = createGlobalStyle`
   @import url("https://fonts.googleapis.com/css?family=Roboto");
@@ -65,7 +68,7 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 const httpLink = createHttpLink({
-    uri: 'https://testnets-api.opensea.io/graphql/',
+    uri: process.env.REACT_APP_GQL_API,
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -74,7 +77,7 @@ const authLink = setContext((_, { headers }) => {
         headers: {
             ...headers,
             authorization: Boolean(token) ? `JWT ${token}` : '',
-            'X-API-KEY': '11671121b01f4beb9317229a88785834',
+            'X-API-KEY': process.env.REACT_APP_API_KEY,
         },
     };
 });
@@ -100,7 +103,7 @@ export const client = new ApolloClient({
 
 sagaMiddleware.run(rootSaga);
 
-ReactDOM.render(
+render(
     <ApolloProvider client={client}>
         <Provider store={store}>
             <GlobalStyle />

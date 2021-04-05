@@ -1,7 +1,37 @@
 import { OpenSeaPort } from 'opensea-js';
 import React from 'react';
-import { toUnitAmount } from 'src/constant';
+
 import styled from 'styled-components';
+
+import { toUnitAmount } from 'src/constant';
+
+const OrderWrapper = styled.div`
+    * {
+        font-weight: 500;
+        font-size: 14px;
+        text-align: center;
+        color: white;
+    }
+    flex: 1;
+    max-width: 255px;
+    min-width: 255px;
+    min-height: 356px;
+    > div:first-child {
+    }
+    > div:last-child {
+        * {
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+            color: white;
+        }
+    }
+    img {
+        max-width: 255px;
+        min-width: 255px;
+        max-height: 356px;
+    }
+`;
 
 export interface OrderProps {
     seaport: OpenSeaPort | null;
@@ -47,26 +77,3 @@ export const Order: React.FC<OrderProps> = ({ order, onClick }) => {
         </OrderWrapper>
     );
 };
-
-const OrderWrapper = styled.div`
-    * {
-        font-weight: 500;
-        font-size: 14px;
-        text-align: center;
-        color: white;
-    }
-    flex: 1;
-    max-width: 255px;
-    min-width: 255px;
-    min-height: 356px;
-    > div:first-child {
-    }
-    > div:last-child {
-        * {
-            font-weight: 500;
-            font-size: 14px;
-            text-align: center;
-            color: white;
-        }
-    }
-`;

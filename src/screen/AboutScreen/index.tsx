@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useIntl } from 'react-intl';
 
-import { Button, Footer, Header } from 'src/components';
+import { Footer, Header } from 'src/components';
 import BG from 'src/assets/about_bg.png';
 import Music from 'src/assets/music.svg';
 import IV from 'src/assets/investor.svg';
@@ -26,300 +27,6 @@ import Kyle from 'src/assets/member/kyle.svg';
 import Kyung from 'src/assets/member/kyung.svg';
 import Lucia from 'src/assets/member/lucia.svg';
 import Terry from 'src/assets/member/terry.svg';
-
-const STATIC_DATA = [
-    { name: 'Private sale', value: '21.61' },
-    { name: 'Marketing', value: '14.00' },
-    { name: 'R&D', value: '14.00' },
-    { name: 'Operations', value: '13.67' },
-    { name: 'Founding Team', value: '8.33' },
-    { name: 'Alpha Quark Alliance', value: '13.33' },
-    { name: 'Reserve', value: '15.05' },
-];
-
-export const AboutScreen = () => {
-    return (
-        <React.Fragment>
-            <Header />
-            <AboutScreenWrapper bg={BG} bg2={Music}>
-                <div>
-                    <div>About</div>
-                    <InformationWrapper>
-                        <div>
-                            <div>Intellectual property, the most valuable asset in the world</div>
-                            <div>
-                                <div />
-                                <div>
-                                    We believe intellectual properties such as music copyright, movie copyright, writing
-                                    copyright are purely valuable creativity of humanity. The artists, writers, creators
-                                    are required to be respected emotionally, and economically, but it’s not easy.
-                                    Wiprex iFi, the abbreviation of World Intellectual Property Right Exchange iFi, will
-                                    make a change to make a better world for the artists, writers, creators.
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div>What is IP-fi?</div>
-                            <div>
-                                <div />
-                                <div>
-                                    IP-fi represents NFT backed by Intellectual property, which use blockchain
-                                    technology. By using blockchain technology, users can own and manage intellectual
-                                    property as NFT You can buy NFT backed by intellectual property through Alpha Quark
-                                    Token(AQT) and even you can stake and get royalty from the intellectual property
-                                    that you bought.
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div>What is NFT?</div>
-                            <div>
-                                <div />
-                                <div>
-                                    A non-fungible token (NFT) is a digital file whose unique identity and ownership are
-                                    verified on a blockchain (a digital ledger). NFTs are not mutually interchangeable.
-                                    NFTs are commonly created by uploading files, such as digital artwork, to
-                                    an auction market. NFTs can be used to commodify digital creations, such as digital
-                                    art, video game items, and music files.
-                                </div>
-                            </div>
-                        </div>
-                    </InformationWrapper>
-                    <IPFiWrapper>
-                        <div>Alpha Quark IP-fi will make a change for everyone</div>
-                        <div>
-                            <div>
-                                <div>
-                                    <img src={IV} alt="iv" />
-                                </div>
-                                <div>
-                                    <div>Investors</div>
-                                    <div>
-                                        For those who believe Intellectual property finance can be helpful for people
-                                        all around the world, we designed and planned Alpha Quark IP-fi to provide them
-                                        new chances to invest in intellectual property as NFT. From now on, Alpha Quark
-                                        users can invest in not only crypto-asset, but also intellectual property such
-                                        as music, webtoon, movies copyright and so on.
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={CA} alt="ca" />
-                                </div>
-                                <div>
-                                    <div>Creators & Artists</div>
-                                    <div>
-                                        Artists and creators have not had good chances to have financial options even
-                                        though they are devoting themselves for people all around the world. As creators
-                                        and artists, they need to find a good way to continue their art works or
-                                        creative activities. As Alpha Quark IP-fi will provide them good economic
-                                        options that they have never had before, they will be able to enjoy much more
-                                        freedom for new activities and work.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </IPFiWrapper>
-                    <FeatureWrapper>
-                        <div>Feature</div>
-                        <div>
-                            <div>
-                                <div>
-                                    <img src={Convert} alt="convert" />
-                                </div>
-                                <div>
-                                    <div>Get NFT through AQT</div>
-                                </div>
-                                <div>
-                                    You can get valuable NFT with your LP token in Alpha Quark IP-fi.
-                                    <br />
-                                    <br /> You can easily deposit AQT on Alpha Quark IP-FI and you can easily purchase
-                                    NFT.
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={Holding} alt="holding" />
-                                </div>
-                                <div>
-                                    <div>Get royalty from intellectual property By holding NFT</div>
-                                </div>
-                                <div>
-                                    You can earn royalty from copyrights of Alpha Quark IP-fi. Quark IP-fi gives you
-                                    reward from cash flow earned by inllectual property royalty.
-                                </div>
-                            </div>
-                        </div>
-                    </FeatureWrapper>
-                    <TriangleWrapper>
-                        <div>
-                            <div>How you get royalty through NFT on Alpha Quark IP-Fi</div>
-                        </div>
-                        <div>
-                            <img src={Triangle} alt="triangle" />
-                        </div>
-                    </TriangleWrapper>
-                    <TranslateWrapper>
-                        <div>
-                            <div>
-                                Buy and Sell you <span>NFT in marketplace</span>
-                            </div>
-                        </div>
-                        <div>
-                            <img src={Translate} alt="translate" />
-                        </div>
-                    </TranslateWrapper>
-                    <PartnerWrapper>
-                        <div>
-                            <div>Crypto Exchange Partners</div>
-                            <div>
-                                <div>
-                                    <img src={Bithumb} alt="bithumb" />
-                                </div>
-                                <div>
-                                    <img src={Upbit} alt="Upbit" />
-                                </div>
-                                <div>
-                                    <img src={GateIO} alt="GateIO" />
-                                </div>
-                                <div>
-                                    <img src={GoPAX} alt="GoPAX" />
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div>Partners</div>
-                            <div>
-                                <div>
-                                    <img src={PayProtocol} alt="PayProtocol" />
-                                </div>
-                                <div>
-                                    <img src={Wiprex} alt="Wiprex" />
-                                </div>
-                                <div>
-                                    <img src={WXY} alt="WXY" />
-                                </div>
-                                <div>
-                                    <img src={FM} alt="FM" />
-                                </div>
-                                <div>
-                                    <img src={KMGA} alt="KMGA" />
-                                </div>
-                            </div>
-                        </div>
-                    </PartnerWrapper>
-                    <TeamWrapper>
-                        <div>Team</div>
-                        <div>
-                            <div>
-                                <div>
-                                    <img src={Terry} alt="Terry" />
-                                </div>
-                                <div>
-                                    <div>Terry Kim</div>
-                                    <div>Chief Executive Officer</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={Kyle} alt="Kyle" />
-                                </div>
-                                <div>
-                                    <div>Kyle Kim</div>
-                                    <div>Chief Operating Officer</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={Back} alt="Back" />
-                                </div>
-                                <div>
-                                    <div>Seung Hoon Back</div>
-                                    <div>Chief Technology Officer</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={Kyung} alt="Kyung" />
-                                </div>
-                                <div>
-                                    <div>Kyoung Young Lee</div>
-                                    <div>Chief Information Security Officer</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={Lucia} alt="Lucia" />
-                                </div>
-                                <div>
-                                    <div>Lucia Lim</div>
-                                    <div>Chief Marketing Officer</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <img src={Daniel} alt="Daniel" />
-                                </div>
-                                <div>
-                                    <div>Daniel No</div>
-                                    <div>Research Analyst</div>
-                                </div>
-                            </div>
-                        </div>
-                    </TeamWrapper>
-                    <TokenInfoWrapper>
-                        <div>Alpha Quark Token Info</div>
-                        <div>
-                            <div>
-                                {STATIC_DATA.map((e) => {
-                                    return (
-                                        <div>
-                                            <div>{`${e.value}%`}</div>
-                                            <div>{e.name}</div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                            <div>
-                                <img src={Doughnut} alt="doughnut" />
-                            </div>
-                            <div>
-                                You can buy NFTized intellectual property by using Alpha Quark Token.
-                                <br /> Once you get NFT in Alpha Quark IP-fi, you will get royalty from the intellectual
-                                property.
-                            </div>
-                        </div>
-                    </TokenInfoWrapper>
-                    <BannerWrapper>
-                        <div>Do you want to learn more about Alpha Quark IP-fi?</div>
-                        <div>
-                            <Button variant="primary">Go to Docs to learn more</Button>
-                        </div>
-                    </BannerWrapper>
-                    <ContactWrapper>
-                        <div>Contact Us</div>
-                        <div>
-                            <div>
-                                <input type="text" placeholder="HELLOWORLD" />
-                                <input />
-                                <input />
-                                <input />
-                            </div>
-                            <div>
-                                <textarea />
-                            </div>
-                            <div>
-                                <Button variant="primary">Send message</Button>
-                            </div>
-                        </div>
-                    </ContactWrapper>
-                </div>
-            </AboutScreenWrapper>
-            <Footer />
-        </React.Fragment>
-    );
-};
 
 const TeamWrapper = styled.div`
     display: flex;
@@ -393,72 +100,6 @@ const PartnerWrapper = styled.div`
             display: flex;
             margin: auto;
             grid-gap: 20px;
-        }
-    }
-`;
-
-const ContactWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    > div:first-child {
-        font-size: 28px;
-        line-height: 30px;
-        margin: auto;
-    }
-    > div:nth-child(2) {
-        min-width: 714px;
-        max-width: 714px;
-        display: flex;
-        grid-gap: 10px;
-        flex-direction: column;
-        margin: auto;
-        margin-top: 40px;
-        margin-bottom: 120px;
-        > div {
-            flex-wrap: wrap;
-            grid-gap: 10px;
-            display: flex;
-
-            input {
-                flex-wrap: nowrap;
-                min-height: 46px;
-                flex: 0;
-                min-width: calc(50% - 5px);
-                color: #949494;
-                padding: 16px;
-            }
-            textarea {
-                flex: 1;
-                min-height: 174px;
-                padding: 16px;
-                max-height: 174px;
-                color: #949494;
-            }
-        }
-        > div:last-child {
-            button {
-                margin: auto;
-            }
-        }
-    }
-`;
-
-const BannerWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    > div:first-child {
-        font-size: 28px;
-        line-height: 30px;
-        margin: auto;
-    }
-    > div:last-child {
-        display: flex;
-        margin-top: 40px;
-        margin-bottom: 240px;
-        button {
-            margin: auto;
-            border-radius: 4px;
-            padding: 0 25px;
         }
     }
 `;
@@ -699,3 +340,235 @@ const AboutScreenWrapper = styled.div`
         }
     }
 `;
+
+export const AboutScreen: React.FC = () => {
+    const { formatMessage } = useIntl();
+
+    const STATIC_DATA = [
+        { name: formatMessage({ id: 'Private sale' }), value: '21.61' },
+        { name: formatMessage({ id: 'Marketing' }), value: '14.00' },
+        { name: formatMessage({ id: 'R&D' }), value: '14.00' },
+        { name: formatMessage({ id: 'Operations' }), value: '13.67' },
+        { name: formatMessage({ id: 'Founding Team' }), value: '8.33' },
+        { name: formatMessage({ id: 'Alpha Quark Alliance' }), value: '13.33' },
+        { name: formatMessage({ id: 'Reserve' }), value: '15.05' },
+    ];
+
+    return (
+        <React.Fragment>
+            <Header />
+            <AboutScreenWrapper bg={BG} bg2={Music}>
+                <div>
+                    <div>About</div>
+                    <InformationWrapper>
+                        <div>
+                            <div>
+                                {formatMessage({ id: 'Intellectual property, the most valuable asset in the world' })}
+                            </div>
+                            <div>
+                                <div />
+                                <div>{formatMessage({ id: 'about.content.01' })}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>{formatMessage({ id: 'What is IP-fi?' })}</div>
+                            <div>
+                                <div />
+                                <div>{formatMessage({ id: 'about.content.02' })}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>{formatMessage({ id: 'What is NFT?' })}</div>
+                            <div>
+                                <div />
+                                <div>{formatMessage({ id: 'about.content.03' })}</div>
+                            </div>
+                        </div>
+                    </InformationWrapper>
+                    <IPFiWrapper>
+                        <div>{formatMessage({ id: 'Alpha Quark IP-fi will make a change for everyone' })}</div>
+                        <div>
+                            <div>
+                                <div>
+                                    <img src={IV} alt="iv" />
+                                </div>
+                                <div>
+                                    <div>{formatMessage({ id: 'Investors' })}</div>
+                                    <div>{formatMessage({ id: 'about.content.05' })}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={CA} alt="ca" />
+                                </div>
+                                <div>
+                                    <div>{formatMessage({ id: 'Creators & Artists' })}</div>
+                                    <div>{formatMessage({ id: 'about.content.06' })}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </IPFiWrapper>
+                    <FeatureWrapper>
+                        <div>{formatMessage({ id: 'Feature' })}</div>
+                        <div>
+                            <div>
+                                <div>
+                                    <img src={Convert} alt="convert" />
+                                </div>
+                                <div>
+                                    <div>{formatMessage({ id: 'Get NFT through AQT' })}</div>
+                                </div>
+                                <div>{formatMessage({ id: 'about.content.08' })}</div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Holding} alt="holding" />
+                                </div>
+                                <div>
+                                    <div>
+                                        {formatMessage({ id: 'Get royalty from intellectual property By holding NFT' })}
+                                    </div>
+                                </div>
+                                <div>{formatMessage({ id: 'about.content.09' })}</div>
+                            </div>
+                        </div>
+                    </FeatureWrapper>
+                    <TriangleWrapper>
+                        <div>
+                            <div>{formatMessage({ id: 'How you get royalty through NFT on Alpha Quark IP-Fi' })}</div>
+                        </div>
+                        <div>
+                            <img src={Triangle} alt="triangle" />
+                        </div>
+                    </TriangleWrapper>
+                    <TranslateWrapper>
+                        <div>
+                            <div>{formatMessage({ id: 'Buy and Sell you NFT in marketplace' })}</div>
+                        </div>
+                        <div>
+                            <img src={Translate} alt="translate" />
+                        </div>
+                    </TranslateWrapper>
+                    <PartnerWrapper>
+                        <div>
+                            <div>{formatMessage({ id: 'Crypto Exchange Partners' })}</div>
+                            <div>
+                                <div>
+                                    <img src={Bithumb} alt="bithumb" />
+                                </div>
+                                <div>
+                                    <img src={Upbit} alt="Upbit" />
+                                </div>
+                                <div>
+                                    <img src={GateIO} alt="GateIO" />
+                                </div>
+                                <div>
+                                    <img src={GoPAX} alt="GoPAX" />
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>{formatMessage({ id: 'Partners' })}</div>
+                            <div>
+                                <div>
+                                    <img src={PayProtocol} alt="PayProtocol" />
+                                </div>
+                                <div>
+                                    <img src={Wiprex} alt="Wiprex" />
+                                </div>
+                                <div>
+                                    <img src={WXY} alt="WXY" />
+                                </div>
+                                <div>
+                                    <img src={FM} alt="FM" />
+                                </div>
+                                <div>
+                                    <img src={KMGA} alt="KMGA" />
+                                </div>
+                            </div>
+                        </div>
+                    </PartnerWrapper>
+                    <TeamWrapper>
+                        <div>{formatMessage({ id: 'Team' })}</div>
+                        <div>
+                            <div>
+                                <div>
+                                    <img src={Terry} alt="Terry" />
+                                </div>
+                                <div>
+                                    <div>Terry Kim</div>
+                                    <div>{formatMessage({ id: 'Chief Executive Officer' })}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Kyle} alt="Kyle" />
+                                </div>
+                                <div>
+                                    <div>Kyle Kim</div>
+                                    <div>{formatMessage({ id: 'Chief Operating Officer' })}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Back} alt="Back" />
+                                </div>
+                                <div>
+                                    <div>Seung Hoon Back</div>
+                                    <div>{formatMessage({ id: 'Chief Technology Officer' })}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Kyung} alt="Kyung" />
+                                </div>
+                                <div>
+                                    <div>Kyoung Young Lee</div>
+                                    <div>{formatMessage({ id: 'Chief Information Security Officer' })}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Lucia} alt="Lucia" />
+                                </div>
+                                <div>
+                                    <div>Lucia Lim</div>
+                                    <div>{formatMessage({ id: 'Chief Marketing Officer' })}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <img src={Daniel} alt="Daniel" />
+                                </div>
+                                <div>
+                                    <div>Daniel No</div>
+                                    <div>{formatMessage({ id: 'Research Analyst' })}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </TeamWrapper>
+                    <TokenInfoWrapper>
+                        <div>{formatMessage({ id: 'Alpha Quark Token Info' })}</div>
+                        <div>
+                            <div>
+                                {STATIC_DATA.map((e, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <div>{`${e.value}%`}</div>
+                                            <div>{e.name}</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div>
+                                <img src={Doughnut} alt="doughnut" />
+                            </div>
+                            <div>{formatMessage({ id: 'about.content.10' })}</div>
+                        </div>
+                    </TokenInfoWrapper>
+                </div>
+            </AboutScreenWrapper>
+            <Footer />
+        </React.Fragment>
+    );
+};

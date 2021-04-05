@@ -16,147 +16,12 @@ const abbreviateNumber = (num, fixed) => {
         return '0';
     }
     fixed = !fixed || fixed < 0 ? 0 : fixed;
-    var b = num.toPrecision(2).split('e'),
+    const b = num.toPrecision(2).split('e'),
         k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3),
         c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3)).toFixed(1 + fixed),
         d = c < 0 ? c : Math.abs(c),
         e = d + ['', 'K', 'M', 'B', 'T'][k];
     return e;
-};
-
-export const Footer: React.FC = () => {
-    const widgets = useSelector(selectWidgets);
-
-    useWidgetFetch();
-
-    console.log(widgets);
-
-    const renderMarquee = () => {
-        return widgets?.data?.marquee?.map((e) => {
-            return (
-                <div>
-                    <a href={e.id}>
-                        <div>
-                            <img src={`https://s2.coinmarketcap.com/static/img/coins/32x32/${e.id}.png`} alt={e.id} />
-                        </div>
-                        <div>
-                            <div>
-                                <div>
-                                    <span>{e.name}</span>
-                                </div>
-                                <div>{`$${abbreviateNumber(e.quote[AQT_CODE].price, 2)}`}</div>
-                            </div>
-                            <div>
-                                <div>{e.symbol}</div>
-                                <div>
-                                    <span
-                                        className={
-                                            e.quote[AQT_CODE].percent_change_24h >= 0
-                                                ? e.quote[AQT_CODE].percent_change_24h === 0
-                                                    ? 'b n'
-                                                    : 'b p'
-                                                : 'b m'
-                                        }
-                                    />
-                                    {`${abbreviateNumber(e.quote[AQT_CODE].percent_change_24h, 2)}%`}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            );
-        });
-    };
-
-    return (
-        <FooterWrapper>
-            <div>
-                <CopyrightWrapper>
-                    <div>Contact</div>
-                    <div>
-                        <div>Alpha Quark Limited</div>
-                        <div>contact@alphaquark.io</div>
-                    </div>
-                    <div>Copyrights. © 2020 Aphaquark Ltd. All right reserved.</div>
-                </CopyrightWrapper>
-                <div>
-                    {/* marquee */}
-                    <WidgetWrapper>
-                        <div>
-                            <div>Powered by</div>
-                            <img src={CMC} alt="cmc" />
-                        </div>
-                        <MarqueeWrapper>
-                            <div>
-                                {renderMarquee()}
-                                {renderMarquee()}
-                            </div>
-                        </MarqueeWrapper>
-                    </WidgetWrapper>
-                    {/* widget */}
-                    {widgets?.data?.widget?.map((e) => {
-                        return (
-                            <AQTWrapper>
-                                <div>
-                                    <div>
-                                        <img
-                                            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${e.id}.png`}
-                                            alt={e.id}
-                                        />
-                                    </div>
-                                    <div>
-                                        <div>{`${e.name} (${e.symbol})`}</div>
-                                        <div>
-                                            <span>{abbreviateNumber(e.quote[AQT_CODE].price, 2)}</span> USD
-                                            <div
-                                                className={
-                                                    e.quote[AQT_CODE].percent_change_24h >= 0
-                                                        ? e.quote[AQT_CODE].percent_change_24h === 0
-                                                            ? 'n'
-                                                            : 'p'
-                                                        : 'm'
-                                                }>
-                                                {`(${abbreviateNumber(e.quote[AQT_CODE].percent_change_24h, 2)}%)`}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        RANK<span>{e.cmc_rank}</span>
-                                    </div>
-                                    <div>
-                                        MARKET CAP
-                                        <span>{`${abbreviateNumber(e.quote[AQT_CODE].market_cap, 1)} USD`}</span>
-                                    </div>
-                                    <div>
-                                        VOLUME
-                                        <span>{`${abbreviateNumber(e.quote[AQT_CODE].volume_24h, 1)} USD`}</span>
-                                    </div>
-                                </div>
-                                <div>Powered by CoinMarketCap</div>
-                            </AQTWrapper>
-                        );
-                    })}
-                </div>
-                <DocsWrapper>
-                    <div>
-                        <ul>
-                            <li>Telegram</li>
-                            <li>Twitter</li>
-                            <li>Github</li>
-                            <li>Contract Audit</li>
-                        </ul>
-                        <div>
-                            <button>WhitePaper(ENG)</button>
-                            <button>Copyright List(ENG)</button>
-                            <button>Copyright List(KOR)</button>
-                        </div>
-                    </div>
-                </DocsWrapper>
-            </div>
-        </FooterWrapper>
-    );
 };
 
 const DocsWrapper = styled.div`
@@ -420,3 +285,136 @@ const FooterWrapper = styled.div`
         border-top: 5px solid #ea3943;
     }
 `;
+
+export const Footer: React.FC = () => {
+    const widgets = useSelector(selectWidgets);
+
+    useWidgetFetch();
+
+    const renderMarquee = () => {
+        return widgets?.data?.marquee?.map((e, i) => {
+            return (
+                <div key={i}>
+                    <a href={e.id}>
+                        <div>
+                            <img src={`https://s2.coinmarketcap.com/static/img/coins/32x32/${e.id}.png`} alt={e.id} />
+                        </div>
+                        <div>
+                            <div>
+                                <div>
+                                    <span>{e.name}</span>
+                                </div>
+                                <div>{`$${abbreviateNumber(e.quote[AQT_CODE].price, 2)}`}</div>
+                            </div>
+                            <div>
+                                <div>{e.symbol}</div>
+                                <div>
+                                    <span
+                                        className={
+                                            e.quote[AQT_CODE].percent_change_24h >= 0
+                                                ? e.quote[AQT_CODE].percent_change_24h === 0
+                                                    ? 'b n'
+                                                    : 'b p'
+                                                : 'b m'
+                                        }
+                                    />
+                                    {`${abbreviateNumber(e.quote[AQT_CODE].percent_change_24h, 2)}%`}
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            );
+        });
+    };
+
+    return (
+        <FooterWrapper>
+            <div>
+                <CopyrightWrapper>
+                    <div>Contact</div>
+                    <div>
+                        <div>Alpha Quark Limited</div>
+                        <div>contact@alphaquark.io</div>
+                    </div>
+                    <div>Copyrights. © 2020 Aphaquark Ltd. All right reserved.</div>
+                </CopyrightWrapper>
+                <div>
+                    {/* marquee */}
+                    <WidgetWrapper>
+                        <div>
+                            <div>Powered by</div>
+                            <img src={CMC} alt="cmc" />
+                        </div>
+                        <MarqueeWrapper>
+                            <div>
+                                {renderMarquee()}
+                                {renderMarquee()}
+                            </div>
+                        </MarqueeWrapper>
+                    </WidgetWrapper>
+                    {/* widget */}
+                    {widgets?.data?.widget?.map((e, i) => {
+                        return (
+                            <AQTWrapper key={i}>
+                                <div>
+                                    <div>
+                                        <img
+                                            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${e.id}.png`}
+                                            alt={e.id}
+                                        />
+                                    </div>
+                                    <div>
+                                        <div>{`${e.name} (${e.symbol})`}</div>
+                                        <div>
+                                            <span>{abbreviateNumber(e.quote[AQT_CODE].price, 2)}</span> USD
+                                            <div
+                                                className={
+                                                    e.quote[AQT_CODE].percent_change_24h >= 0
+                                                        ? e.quote[AQT_CODE].percent_change_24h === 0
+                                                            ? 'n'
+                                                            : 'p'
+                                                        : 'm'
+                                                }>
+                                                {`(${abbreviateNumber(e.quote[AQT_CODE].percent_change_24h, 2)}%)`}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                        RANK<span>{e.cmc_rank}</span>
+                                    </div>
+                                    <div>
+                                        MARKET CAP
+                                        <span>{`${abbreviateNumber(e.quote[AQT_CODE].market_cap, 1)} USD`}</span>
+                                    </div>
+                                    <div>
+                                        VOLUME
+                                        <span>{`${abbreviateNumber(e.quote[AQT_CODE].volume_24h, 1)} USD`}</span>
+                                    </div>
+                                </div>
+                                <div>Powered by CoinMarketCap</div>
+                            </AQTWrapper>
+                        );
+                    })}
+                </div>
+                <DocsWrapper>
+                    <div>
+                        <ul>
+                            <li>Telegram</li>
+                            <li>Twitter</li>
+                            <li>Github</li>
+                            <li>Contract Audit</li>
+                        </ul>
+                        <div>
+                            <button>WhitePaper(ENG)</button>
+                            <button>Copyright List(ENG)</button>
+                            <button>Copyright List(KOR)</button>
+                        </div>
+                    </div>
+                </DocsWrapper>
+            </div>
+        </FooterWrapper>
+    );
+};

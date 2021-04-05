@@ -1,62 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
+import { changeLanguage, selectCurrentLanguage } from 'src/modules';
 import AQTLogo from 'src/assets/aqt.png';
 import MySvg from 'src/assets/myicon.svg';
-
-interface HeaderProps {
-    background?: string;
-}
-
-export const Header: React.FC<HeaderProps> = ({ background }) => {
-    const history = useHistory();
-    const [toggle, setToggle] = React.useState(false);
-
-    const toggleState = () => {
-        setToggle(!toggle);
-    };
-
-    return (
-        <HeaderWrapper>
-            <div>
-                <div>
-                    <div>
-                        <div>
-                            <div>EN</div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div onClick={() => history.push('/')}>
-                        <img src={AQTLogo} alt="aqt" />
-                    </div>
-                    <ul>
-                        <li onClick={() => history.push('/about')}>ABOUT</li>
-                        <li onClick={() => history.push('/')}>NFT</li>
-                        <li onClick={() => history.push('/')}>IP-Fi</li>
-                        <li onClick={() => history.push('/product')}>MARKETPLACE</li>
-                        <li onClick={() => history.push('/')}>DOCS</li>
-                        <li>
-                            <div onClick={toggleState}>
-                                <img src={MySvg} alt="mySvg" />
-                            </div>
-
-                            <div>
-                                {toggle && (
-                                    <React.Fragment>
-                                        <div onClick={() => history.push('/wallet')}>My Items</div>
-                                        <div>Settings</div>
-                                    </React.Fragment>
-                                )}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </HeaderWrapper>
-    );
-};
 
 const HeaderWrapper = styled.div`
     display: flex;
@@ -139,3 +89,64 @@ const HeaderWrapper = styled.div`
         }
     }
 `;
+
+interface HeaderProps {
+    background?: string;
+}
+
+export const Header: React.FC<HeaderProps> = () => {
+    const history = useHistory();
+    const [toggle, setToggle] = useState(false);
+    const dispatch = useDispatch();
+    const { formatMessage } = useIntl();
+
+    const toggleState = () => {
+        setToggle(!toggle);
+    };
+
+    const currentLang = useSelector(selectCurrentLanguage);
+
+    const handleLang = () => {
+        dispatch(changeLanguage(currentLang === 'en' ? 'zh' : 'en'));
+    };
+
+    return (
+        <HeaderWrapper>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div onClick={handleLang}>{currentLang?.toUpperCase()}</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div onClick={() => history.push('/')}>
+                        <img src={AQTLogo} alt="aqt" />
+                    </div>
+                    <ul>
+                        <li onClick={() => history.push('/about')}>{formatMessage({ id: 'About' })}</li>
+                        <li onClick={() => history.push('/NFT')}>{formatMessage({ id: 'NFT' })}</li>
+                        <li onClick={() => history.push('/')}>{formatMessage({ id: 'IP-Fi' })}</li>
+                        <li onClick={() => history.push('/')}>{formatMessage({ id: 'MARKETPLACE' })}</li>
+                        <li>
+                            <div onClick={toggleState}>
+                                <img src={MySvg} alt="mySvg" />
+                            </div>
+
+                            <div>
+                                {toggle && (
+                                    <React.Fragment>
+                                        <div onClick={() => history.push('/wallet')}>
+                                            {formatMessage({ id: 'MyItems' })}
+                                        </div>
+                                    </React.Fragment>
+                                )}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </HeaderWrapper>
+    );
+};

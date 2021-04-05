@@ -1,50 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
+
 import { Button } from '..';
-
 import CROSS from 'src/assets/cross.svg';
-
-export interface ModalProps {
-    header?: React.ReactNode;
-    body?: React.ReactNode;
-    submit?: any;
-    submitLabel?: string;
-    close: any;
-    closeLabel: string;
-    width: number;
-    buttonDisabled?: boolean;
-    hiddenLabel?: boolean;
-}
-
-export const Modal: React.FC<ModalProps> = React.memo(({ ...props }) => {
-    const { submit, close, header, body, closeLabel, submitLabel, width, buttonDisabled, hiddenLabel } = props;
-    return (
-        <React.Fragment>
-            <ModalWrapper width={width}>
-                <div>
-                    <div className="cross">
-                        <img src={CROSS} onClick={close} alt="close" />
-                    </div>
-                    <ContentWrapper>
-                        <div>{header ? header : null}</div>
-                        <div>{body ? body : null}</div>
-                    </ContentWrapper>
-                    {!hiddenLabel && (
-                        <ButtonWrapper>
-                            <Button disabled={buttonDisabled} variant="secondary" onClick={close}>
-                                {closeLabel}
-                            </Button>
-                            <Button disabled={buttonDisabled} variant="primary" onClick={submit}>
-                                {submitLabel}
-                            </Button>
-                        </ButtonWrapper>
-                    )}
-                </div>
-            </ModalWrapper>
-            <Shadow onClick={close} />
-        </React.Fragment>
-    );
-});
 
 const ButtonWrapper = styled.div`
     display: flex;
@@ -111,3 +69,45 @@ const Shadow = styled.div`
     background-color: black;
     z-index: 1;
 `;
+
+export interface ModalProps {
+    header?: React.ReactNode;
+    body?: React.ReactNode;
+    submit?: any;
+    submitLabel?: string;
+    close: any;
+    closeLabel: string;
+    width: number;
+    buttonDisabled?: boolean;
+    hiddenLabel?: boolean;
+}
+
+export const Modal: React.FC<ModalProps> = React.memo(({ ...props }) => {
+    const { submit, close, header, body, closeLabel, submitLabel, width, buttonDisabled, hiddenLabel } = props;
+    return (
+        <React.Fragment>
+            <ModalWrapper width={width}>
+                <div>
+                    <div className="cross">
+                        <img src={CROSS} onClick={close} alt="close" />
+                    </div>
+                    <ContentWrapper>
+                        <div>{header ? header : null}</div>
+                        <div>{body ? body : null}</div>
+                    </ContentWrapper>
+                    {!hiddenLabel && (
+                        <ButtonWrapper>
+                            <Button disabled={buttonDisabled} variant="secondary" onClick={close}>
+                                {closeLabel}
+                            </Button>
+                            <Button disabled={buttonDisabled} variant="primary" onClick={submit}>
+                                {submitLabel}
+                            </Button>
+                        </ButtonWrapper>
+                    )}
+                </div>
+            </ModalWrapper>
+            <Shadow onClick={close} />
+        </React.Fragment>
+    );
+});

@@ -1,23 +1,8 @@
 import React from 'react';
-import { Header } from 'src/components';
 import styled from 'styled-components';
 
+import { Header } from 'src/components';
 import MicImage from 'src/assets/website_mic.png';
-
-export const LandingScreen: React.FC = () => {
-    return (
-        <React.Fragment>
-            <Header background="#5122c4" />
-            <LandingWrapper bg={MicImage}>
-                <div>
-                    <div>
-                        Enjoy <span>NFT items</span> backed by intellectual property.
-                    </div>
-                </div>
-            </LandingWrapper>
-        </React.Fragment>
-    );
-};
 
 const LandingWrapper = styled.div`
     background: #5122c4;
@@ -47,3 +32,18 @@ const LandingWrapper = styled.div`
         }
     }
 `;
+
+export const LandingScreen: React.FC = () => {
+    return (
+        <React.Fragment>
+            <Header background="#5122c4" />
+            <LandingWrapper bg={MicImage}>
+                <div>
+                    <div>
+                        Enjoy <span>NFT items</span> backed by intellectual property.
+                    </div>
+                </div>
+            </LandingWrapper>
+        </React.Fragment>
+    );
+};

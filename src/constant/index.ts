@@ -1,14 +1,14 @@
+/* eslint-disable */
 import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
 
-const Web3 = require('web3');
-
-export const PRODUCT_CONTRACT = '0x3241b3eb213cdcad0c5ab3858b5875b0567f7b8f';
+export const PRODUCT_CONTRACT = process.env.REACT_APP_PRODUCT_CONTRACT;
 
 export const DEFAULT_DECIMALS = 18;
-export let web3Provider =
+export const web3Provider =
     typeof (window as any).web3 !== 'undefined'
         ? (window as any).web3.currentProvider
-        : new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/6ae0876f5fbb40c4932fa32cf62d8af2');
+        : new Web3.providers.HttpProvider(process.env.REACT_APP_INFURA_URL);
 
 // Replace this with Redux for more complex logic
 const networkCallbacks = [];

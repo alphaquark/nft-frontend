@@ -6,10 +6,6 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     disabled?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = React.memo(({ ...props }) => {
-    return <ButtonWrapper {...props}>{props.children}</ButtonWrapper>;
-});
-
 const ButtonWrapper = styled.button`
     border: none;
     ${({ variant }) => {
@@ -26,3 +22,7 @@ const ButtonWrapper = styled.button`
     line-height: 40px;
     min-width: 160px;
 `;
+
+export const Button: React.FC<ButtonProps> = React.memo(({ ...props }) => {
+    return <ButtonWrapper {...props}>{props.children}</ButtonWrapper>;
+});

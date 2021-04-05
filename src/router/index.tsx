@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
@@ -68,15 +68,15 @@ const WrappedScreen = ({ component: Component, ...props }) => {
     );
 };
 
-export const Router: React.FC = (props) => {
-    const [account, setAccount] = React.useState<string | null>(null);
+export const Router: React.FC = () => {
+    const [account, setAccount] = useState<string | null>(null);
     const history = useHistory();
     const { ethereum } = window as any;
     useSeaportFetch();
 
     const seaport = useSelector(selectSeaport);
 
-    const handleEthereum = React.useCallback(async () => {
+    const handleEthereum = useCallback(async () => {
         try {
             await ethereum.enable();
         } catch (e) {
@@ -84,7 +84,7 @@ export const Router: React.FC = (props) => {
         }
     }, [ethereum, history]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (seaport) {
             const asyncFunction = async () => {
                 try {
@@ -117,7 +117,7 @@ export const Router: React.FC = (props) => {
             <Route exact={true} path="/about" component={AboutScreen} />
             <Route
                 exact={true}
-                path="/product"
+                path="/NFT"
                 render={() => <WrappedScreen component={ProductScreen} account={account} seaport={seaport} />}
             />
             <Route
