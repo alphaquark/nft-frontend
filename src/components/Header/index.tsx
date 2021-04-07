@@ -96,8 +96,14 @@ const HeaderWrapper = styled.div`
 const ModalBody = styled.div`
     margin: auto;
     text-align: center;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    * {
+        font-weight: bold;
+    }
+    > div:last-child {
+        color: #cdcaca;
+    }
 `;
 
 interface HeaderProps {
@@ -165,9 +171,14 @@ export const Header: React.FC<HeaderProps> = () => {
             {modalState && (
                 <Modal
                     close={() => setModalState(false)}
-                    closeLabel="Coming soon"
+                    closeLabel={formatMessage({ id: 'Coming soon' })}
                     width={550}
-                    body={<ModalBody>IP-fi (Intellectual property backed Decentralized finance) Service</ModalBody>}
+                    body={
+                        <ModalBody>
+                            <div>{formatMessage({ id: 'Alpha Quark IP-Fi' })}</div>
+                            <div>{formatMessage({ id: '(Intellectual property backed Decentralized finance)' })}</div>
+                        </ModalBody>
+                    }
                     useConfirm={true}
                 />
             )}

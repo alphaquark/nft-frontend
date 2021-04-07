@@ -1,4 +1,3 @@
-import { OpenSeaPort } from 'opensea-js';
 import React from 'react';
 
 import styled from 'styled-components';
@@ -34,9 +33,7 @@ const OrderWrapper = styled.div`
 `;
 
 export interface OrderProps {
-    seaport: OpenSeaPort | null;
     order: any;
-    accountAddress: string | null;
     wallet?: boolean;
     onClick: () => void;
 }
@@ -52,17 +49,12 @@ export const Order: React.FC<OrderProps> = ({ order, onClick }) => {
             </div>
 
             <div>
-                {/* <div>{`${tokenId} ${tokenAddress}`}</div> */}
                 <div>{name}</div>
                 {order?.currentPrice && (
                     <div>{`${toUnitAmount(order?.currentPrice, order?.paymentTokenContract).toString()} ${
                         order.paymentTokenContract.symbol
                     }`}</div>
                 )}
-                {/* <div>{tokenId}</div> */}
-                {/* <div>{imageUrl}</div> */}
-                {/* <div>{side}</div> */}
-                {/* <div>{JSON.stringify(owner)}</div> */}
             </div>
             <div>
                 {sellOrders?.length

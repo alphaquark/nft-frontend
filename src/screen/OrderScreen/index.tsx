@@ -245,7 +245,7 @@ const AudioController = styled.div`
 `;
 
 const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seaport }) => {
-    const { curTime, duration, playing, setPlaying, setClickedTime } = useAudioPlayer();
+    const { curTime, duration, setPlaying } = useAudioPlayer();
     const [orders, setOrders] = useState<any>(null);
     const [count, setCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
@@ -341,8 +341,6 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
             setOrdering(false);
         }
     };
-    console.warn(curTime, duration, playing, setPlaying, setClickedTime);
-    console.warn(asset?.traits?.filter((e) => e.trait_type === 'preview-uri'));
 
     return (
         <OrderScreenWrapper>
@@ -388,9 +386,11 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                                             <audio id="audio" autoPlay>
                                                 <source
                                                     src={
-                                                        asset?.traits?.filter((e) => e.trait_type === 'preview-uri')[0][
-                                                            'value'
-                                                        ]
+                                                        asset?.traits?.find((e) => e.trait_type === 'preview-uri')
+                                                            ? asset?.traits?.find(
+                                                                  (e) => e.trait_type === 'preview-uri'
+                                                              )['value']
+                                                            : ''
                                                     }
                                                 />
                                                 Your browser does not support the <code>audio</code> element.
@@ -451,7 +451,7 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                                                                         orders?.length && orders[0]?.currentPrice,
                                                                         orders?.length &&
                                                                             orders[0]?.paymentTokenContract
-                                                                    )?.toString() >=
+                                                                    )?.toString() >
                                                                         (balance.target.id.toUpperCase() !== 'ETH'
                                                                             ? (
                                                                                   +balance.target.balance / 1e18
@@ -465,7 +465,7 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                                                                           orders?.length && orders[0]?.currentPrice,
                                                                           orders?.length &&
                                                                               orders[0]?.paymentTokenContract
-                                                                      )?.toString() >=
+                                                                      )?.toString() >
                                                                       (balance.target.id.toUpperCase() !== 'ETH'
                                                                           ? (+balance.target.balance / 1e18).toString()
                                                                           : (+balance.eth / 1e18).toString())

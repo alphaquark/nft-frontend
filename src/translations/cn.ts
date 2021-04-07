@@ -92,4 +92,7 @@ export const cn = {
 
     'Marketplace for users': '用户市场。',
     'Coming soon': '即将推出',
+
+    'Alpha Quark IP-Fi': 'Alpha Quark IP-Fi',
+    '(Intellectual Property Backed Decentralized Finance)': '(知识产权支持的分散式金融)',
 };

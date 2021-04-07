@@ -3,13 +3,45 @@ import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { useIntl } from 'react-intl';
 
-import { Button, Order, SelectModal } from 'src/components';
-import { PRODUCT_CONTRACT } from 'src/constant';
+import { Button, SelectModal } from 'src/components';
+import { PRODUCT_CONTRACT, toUnitAmount } from 'src/constant';
 import Music from 'src/assets/music.svg';
 import Paint from 'src/assets/painting.svg';
 import TP from 'src/assets/tp.svg';
 import WebToon from 'src/assets/webtoon.svg';
 import Metamask from 'src/assets/metamask.svg';
+
+const ModalHeader = styled.div`
+    display: flex;
+    flex-direction: column;
+    > div {
+        margin: auto;
+        font-size: 20px;
+        line-height: 23px;
+    }
+    margin-bottom: 40px;
+`;
+
+const ModalBody = styled.div`
+    display: flex;
+    flex-direction: column;
+    grid-gap: 20px;
+    > div {
+        justify-content: space-between;
+        display: flex;
+    }
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    padding: 20px 0;
+    * {
+        line-height: 40px;
+        font-size: 12px;
+    }
+    button {
+        min-width: 80px;
+        border-radius: 100px;
+    }
+`;
 
 const FooterContainer = styled.div`
     display: flex;
@@ -138,6 +170,66 @@ const FlexWrapper = styled.div`
     grid-gap: 20px;
     margin-bottom: 30px;
     flex-wrap: wrap;
+    grid-gap: 20px;
+    > div {
+        position: relative;
+        > div {
+            background: #242448;
+            min-width: 255px;
+            max-width: 255px;
+            max-height: 410px;
+            > div:first-child {
+                padding: 17px;
+            }
+            > div:last-child {
+                display: flex;
+                flex-direction: column;
+                > div {
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                    display: flex;
+                    padding: 16px;
+                    justify-content: space-between;
+                    font-size: 14px;
+                    * {
+                        color: #9191a3;
+                    }
+                    > div:last-child {
+                        color: #5d63ff !important;
+                    }
+                }
+                > div:first-child {
+                    padding-top: 0;
+                    color: white;
+                }
+                > div:last-child {
+                    border-bottom: none;
+                }
+            }
+            img {
+                min-width: 220px;
+                max-width: 220px;
+                min-height: 220px;
+                max-height: 220px;
+            }
+        }
+    }
+    .Masked {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        > div {
+            font-size: 20px;
+            line-height: 23px;
+            font-weight: bold;
+            color: #d25757;
+            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            margin: auto;
+        }
+    }
 `;
 
 const MetaMaskContainer = styled.div`
@@ -247,7 +339,6 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
             title: formatMessage({ id: 'Patent and Trademark' }),
         },
     ];
-    // ?.filter((e) => e.sellOrders?.length !== 0)
 
     useEffect(() => {
         if (seaport && account) {
@@ -275,7 +366,6 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
                         }
                     });
                     setTempOrders(returnArray);
-                    console.warn(returnArray);
                     setCount(count);
                     setLoading(false);
                 } catch (e) {
@@ -301,30 +391,36 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
                             {tempOrders &&
                                 Object.entries(tempOrders).map((e: any, i) => {
                                     return (
-                                        <Order
-                                            key={i}
-                                            order={{ asset: e[1].data[0] }}
-                                            seaport={seaport}
-                                            accountAddress={account}
-                                            onClick={() => {
-                                                if (e[1].sellOrders) {
-                                                    setSelected(e[1]);
-                                                    setModalState(true);
-                                                }
-                                            }}
-                                        />
+                                        <div key={i}>
+                                            <div
+                                                onClick={() => {
+                                                    if (e[1]?.sellOrders) {
+                                                        setSelected(e[1]);
+                                                        setModalState(true);
+                                                    }
+                                                }}>
+                                                <div>
+                                                    <img src={e[1].data[0].imageUrl} alt={e[0]} />
+                                                </div>
+                                                <div>
+                                                    <div>{e[0]}</div>
+                                                    <div>
+                                                        <div>Total Amount</div>
+                                                        <div>{e[1].data.length}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>Remains</div>
+                                                        <div>{e[1].sellOrders}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {!e[1]?.sellOrders && (
+                                                <div className="Masked">
+                                                    <div>Sold out</div>
+                                                </div>
+                                            )}
+                                        </div>
                                     );
-                                    // return e[1].data.map((e) => {
-                                    //     return (
-                                    //         <Order
-                                    //             key={i}
-                                    //             order={{ asset: e }}
-                                    //             seaport={seaport}
-                                    //             accountAddress={account}
-                                    //             onClick={() => history.push(`/detail/${e.tokenAddress}/${e.tokenId}`)}
-                                    //         />
-                                    //     );
-                                    // });
                                 })}
                         </FlexWrapper>
                     ) : (
@@ -397,24 +493,43 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
             </ProductScreenWrapper>
             {modalState && (
                 <SelectModal
-                    header={<div>12312</div>}
+                    header={
+                        <ModalHeader>
+                            <div>Choose Serial ID</div>
+                        </ModalHeader>
+                    }
                     body={
-                        <div>
-                            {selected.data.map((e, i) => {
-                                return (
-                                    <Order
-                                        key={i}
-                                        order={{ asset: e }}
-                                        seaport={seaport}
-                                        accountAddress={account}
-                                        onClick={() => console.warn('checked')}
-                                    />
-                                );
-                            })}
-                        </div>
+                        <ModalBody>
+                            {selected.data
+                                .filter((e) => e.sellOrders.length > 0)
+                                .map((e, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <div>{e.traits.find((e) => e.trait_type === 'serial-number').value}</div>
+                                            <div>
+                                                {e.sellOrders?.length
+                                                    ? `${toUnitAmount(
+                                                          e.sellOrders?.length && e.sellOrders[0]?.currentPrice,
+                                                          e.sellOrders?.length && e.sellOrders[0]?.paymentTokenContract
+                                                      )?.toString()} ${e.sellOrders[0]?.paymentTokenContract?.symbol}`
+                                                    : null}
+                                            </div>
+                                            <div>
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() =>
+                                                        history.push(`/detail/${e.tokenAddress}/${e.tokenId}`)
+                                                    }>
+                                                    Buy
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                        </ModalBody>
                     }
                     close={() => setModalState(false)}
-                    width={300}
+                    width={500}
                 />
             )}
         </React.Fragment>

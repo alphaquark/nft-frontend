@@ -95,4 +95,7 @@ export const en = {
 
     'Marketplace for users': 'Marketplace for users',
     'Coming soon': 'Coming soon',
+
+    'Alpha Quark IP-Fi': 'Alpha Quark IP-Fi',
+    '(Intellectual Property Backed Decentralized Finance)': '(Intellectual Property Backed Decentralized Finance)',
 };

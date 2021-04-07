@@ -229,13 +229,7 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
                             <FlexWrapper>
                                 {assets?.map((asset: any, i: number) => (
                                     <OrderWrapper index={i} key={i} selected={selected}>
-                                        <Order
-                                            key={i}
-                                            order={{ asset }}
-                                            seaport={seaport}
-                                            accountAddress={account}
-                                            onClick={() => handleSelected(i, asset)}
-                                        />
+                                        <Order key={i} order={{ asset }} onClick={() => handleSelected(i, asset)} />
                                     </OrderWrapper>
                                 ))}
                             </FlexWrapper>
