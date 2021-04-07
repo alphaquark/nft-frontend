@@ -6,7 +6,6 @@ import { selectWidgets, widgetFetch } from '../modules';
 export const useWidgetFetch = (): void => {
     const shouldDispatch = useSelector(selectWidgets);
     const dispatch = useDispatch();
-
     useEffect(() => {
         if (!shouldDispatch) {
             dispatch(widgetFetch());

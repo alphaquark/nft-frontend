@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useIntl } from 'react-intl';
 
-import { Order } from 'src/components';
+import { Button, Order, SelectModal } from 'src/components';
 import { PRODUCT_CONTRACT } from 'src/constant';
 import Music from 'src/assets/music.svg';
 import Paint from 'src/assets/painting.svg';
 import TP from 'src/assets/tp.svg';
 import WebToon from 'src/assets/webtoon.svg';
+import Metamask from 'src/assets/metamask.svg';
 
 const FooterContainer = styled.div`
     display: flex;
@@ -124,9 +124,11 @@ const ProductScreenWrapper = styled.div`
         > div {
             margin: auto;
             letter-spacing: 0.05em;
+            white-space: pre-wrap;
         }
         > div:first-child {
             font-weight: 500;
+            text-align: center;
         }
     }
 `;
@@ -135,24 +137,60 @@ const FlexWrapper = styled.div`
     display: flex;
     grid-gap: 20px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
+`;
+
+const MetaMaskContainer = styled.div`
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    button {
+        margin: auto;
+        cursor: pointer;
+        min-height: 50px;
+        line-height: 50px;
+        font-size: 20px;
+        min-width: 200px;
+        border-radius: 100px;
+        font-weight: bold;
+    }
+    > div:last-child {
+        display: flex;
+        grid-gap: 15px;
+    }
+    > div {
+        margin: auto;
+        cursor: pointer;
+        img {
+            min-width: 200px;
+            min-height: 200px;
+        }
+    }
 `;
 
 const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seaport }) => {
-    const [orders, setOrders] = useState<any>(null);
+    const [tempOrders, setTempOrders] = useState<any>(null);
     const [count, setCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
+    const [modalState, setModalState] = useState<boolean>(false);
+    const [selected, setSelected] = useState<any>(false);
     const history = useHistory();
     const { formatMessage } = useIntl();
     const { ethereum } = window as any;
 
-    const handleEthereum = async () => {
+    const handleEthereum = useCallback(async () => {
         try {
-            await ethereum.enable();
+            if (ethereum) {
+                await ethereum.enable();
+            } else {
+                alert('Please install Metamask plugin');
+            }
         } catch (e) {
+            alert('Login processing, please try again');
             history.go(0);
         }
-    };
+    }, [ethereum, history]);
 
     const LABEL_REPEATER = [
         {
@@ -209,6 +247,7 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
             title: formatMessage({ id: 'Patent and Trademark' }),
         },
     ];
+    // ?.filter((e) => e.sellOrders?.length !== 0)
 
     useEffect(() => {
         if (seaport && account) {
@@ -220,8 +259,23 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
                     setLoading(true);
                     const { assets } = await seaport.api.getAssets({
                         asset_contract_addresses: [PRODUCT_CONTRACT],
+                        limit: 100,
                     });
-                    setOrders(assets);
+                    const returnArray = {};
+                    assets.forEach((e) => {
+                        if (returnArray[e.name]) {
+                            returnArray[e.name] = {
+                                data: [...returnArray[e.name]['data'], e],
+                                sellOrders: e.sellOrders?.length
+                                    ? returnArray[e.name].sellOrders + 1
+                                    : returnArray[e.name].sellOrders,
+                            };
+                        } else {
+                            returnArray[e.name] = { data: [e], sellOrders: e.sellOrders?.length ? 1 : 0 };
+                        }
+                    });
+                    setTempOrders(returnArray);
+                    console.warn(returnArray);
                     setCount(count);
                     setLoading(false);
                 } catch (e) {
@@ -234,86 +288,136 @@ const ProductScreen: React.FC<{ account: any; seaport: any }> = ({ account, seap
     }, [account, seaport, count]);
 
     return (
-        <ProductScreenWrapper>
-            <div>
-                <div>{formatMessage({ id: 'Get valuable NFT backed by intellectual property' })}</div>
-            </div>
-            {!error ? (
-                loading ? (
-                    <div>loading</div>
-                ) : account?.length ? (
-                    <React.Fragment>
-                        <PerfectScrollbar>
-                            <FlexWrapper>
-                                {orders
-                                    ?.filter((e) => e.sellOrders?.length !== 0)
-                                    .map((order: any, i: number) => (
+        <React.Fragment>
+            <ProductScreenWrapper>
+                <div>
+                    <div>{formatMessage({ id: 'Get valuable NFT backed by intellectual property' })}</div>
+                </div>
+                {!error ? (
+                    loading ? (
+                        <div>loading</div>
+                    ) : account?.length ? (
+                        <FlexWrapper>
+                            {tempOrders &&
+                                Object.entries(tempOrders).map((e: any, i) => {
+                                    return (
                                         <Order
                                             key={i}
-                                            order={{ asset: order }}
+                                            order={{ asset: e[1].data[0] }}
                                             seaport={seaport}
                                             accountAddress={account}
-                                            onClick={() =>
-                                                history.push(`/detail/${order.tokenAddress}/${order.tokenId}`)
-                                            }
+                                            onClick={() => {
+                                                if (e[1].sellOrders) {
+                                                    setSelected(e[1]);
+                                                    setModalState(true);
+                                                }
+                                            }}
                                         />
-                                    ))}
-                            </FlexWrapper>
-                        </PerfectScrollbar>
-                    </React.Fragment>
+                                    );
+                                    // return e[1].data.map((e) => {
+                                    //     return (
+                                    //         <Order
+                                    //             key={i}
+                                    //             order={{ asset: e }}
+                                    //             seaport={seaport}
+                                    //             accountAddress={account}
+                                    //             onClick={() => history.push(`/detail/${e.tokenAddress}/${e.tokenId}`)}
+                                    //         />
+                                    //     );
+                                    // });
+                                })}
+                        </FlexWrapper>
+                    ) : (
+                        <MetaMaskContainer>
+                            <div onClick={handleEthereum}>
+                                <img src={Metamask} alt="metamask" />
+                            </div>
+                            <div>
+                                <Button variant="primary" onClick={handleEthereum}>
+                                    Metamask Connect
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => window.open('https://metamask.io/download.html')}>
+                                    Download
+                                </Button>
+                            </div>
+                        </MetaMaskContainer>
+                    )
                 ) : (
-                    <button onClick={handleEthereum}>connect</button>
-                )
-            ) : (
-                <div>error!</div>
-            )}
-            <HeaderContainer>
-                <div>{formatMessage({ id: 'NFT backed by IP (Intellectual Property)' })}</div>
-                <div>
-                    {formatMessage({
-                        id:
-                            'Intellectual property is one of the most valuable assets in the world Alpha Quark is acquiring valuable intellectual properties and tokenize them to enable people have accesses to the IP',
+                    <div>error!</div>
+                )}
+                <HeaderContainer>
+                    <div>{formatMessage({ id: 'NFT backed by IP (Intellectual Property)' })}</div>
+                    <div>
+                        {formatMessage({
+                            id:
+                                'Intellectual property is one of the most valuable assets in the world Alpha Quark is acquiring valuable intellectual properties and tokenize them to enable people have accesses to the IP',
+                        })}
+                    </div>
+                </HeaderContainer>
+                <MusicContainer>
+                    {CONTENT.map((e, i) => {
+                        return (
+                            <div key={i}>
+                                <div>
+                                    <img src={e.img} alt={e.title} />
+                                </div>
+                                <div>
+                                    <div>{e.title}</div>
+                                    <div>{e.text}</div>
+                                </div>
+                            </div>
+                        );
                     })}
-                </div>
-            </HeaderContainer>
-            <MusicContainer>
-                {CONTENT.map((e, i) => {
-                    return (
-                        <div key={i}>
-                            <div>
-                                <img src={e.img} alt={e.title} />
-                            </div>
-                            <div>
-                                <div>{e.title}</div>
-                                <div>{e.text}</div>
-                            </div>
+                </MusicContainer>
+
+                <FooterContainer>
+                    <div>{formatMessage({ id: 'Right of Intellectual property backed NFT' })}</div>
+                    <div>
+                        <ul>
+                            {LABEL_REPEATER.map((e, i) => {
+                                return (
+                                    <li key={i}>
+                                        {e.text}
+                                        {e.content && <span>{e.content}</span>}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            {LABEL_SECOND_REPEATER.map((e, i) => {
+                                return <li key={i}>{e.text}</li>;
+                            })}
+                        </ul>
+                    </div>
+                </FooterContainer>
+            </ProductScreenWrapper>
+            {modalState && (
+                <SelectModal
+                    header={<div>12312</div>}
+                    body={
+                        <div>
+                            {selected.data.map((e, i) => {
+                                return (
+                                    <Order
+                                        key={i}
+                                        order={{ asset: e }}
+                                        seaport={seaport}
+                                        accountAddress={account}
+                                        onClick={() => console.warn('checked')}
+                                    />
+                                );
+                            })}
                         </div>
-                    );
-                })}
-            </MusicContainer>
-            <FooterContainer>
-                <div>{formatMessage({ id: 'Right of Intellectual property backed NFT' })}</div>
-                <div>
-                    <ul>
-                        {LABEL_REPEATER.map((e, i) => {
-                            return (
-                                <li key={i}>
-                                    {e.text}
-                                    {e.content && <span>{e.content}</span>}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
-                <div>
-                    <ul>
-                        {LABEL_SECOND_REPEATER.map((e, i) => {
-                            return <li key={i}>{e.text}</li>;
-                        })}
-                    </ul>
-                </div>
-            </FooterContainer>
-        </ProductScreenWrapper>
+                    }
+                    close={() => setModalState(false)}
+                    width={300}
+                />
+            )}
+        </React.Fragment>
     );
 };
 

@@ -1,7 +1,7 @@
-export const zh = {
+export const cn = {
     About: '关于我们',
     NFT: 'NFT',
-    'iP-Fi': 'iP-Fi',
+    'IP-Fi': 'iP-Fi',
     MARKETPLACE: '市场',
     MyItems: '我的物品',
     Settings: '设置',
@@ -10,7 +10,7 @@ export const zh = {
 
     'Intellectual property, the most valuable asset in the world': '知识产权，世界上最有价值的资产',
     'about.content.01':
-        '我们认为，音乐版权、电影版权、著作权等知识产权纯属人类有价值的创造力。艺术家、作家、创作家需要在情感和经济上得到尊重，但并不容易。Wiprex iFi是世界知识产权交易所iFi的缩写，它将做出改变，从而为艺术家、作家、创作家打造一个更美好的世界。',
+        '我们认为，音乐版权、电影版权、著作权等知识产权纯属人类有价值的创造力。艺术家、作家、创作家需要在情感和经济上得到尊重，Alpha Quark将改变世界，为艺术家，作家和创作者创造一个更美好的地方',
     'What is IP-fi?': '什么是IP-fi?',
     'about.content.02':
         'IP-fi代表知识产权支持型NFT，采用的是区块链技术。通过采用区块链技术，用户可以持有并管理NFT代表的知识产权。\n您可以通过使用Alpha Quark代币（AQT）购买知识产权支持型NFT。您甚至还可以从购买的知识产权中获得版税。',
@@ -86,4 +86,10 @@ export const zh = {
     'NFT backed by IP (Intellectual Property)': '由IP（知识产权）支持的NFT',
     'Intellectual Property': 'Intellectual Property',
     'Right of Intellectual property backed NFT': '知识产权支持的NFT',
+
+    'Where you can create your own NFT without coding, Where you can sell and buy NFT items':
+        '您无需编码即可创建自己的NFT，\n在哪里可以买卖NFT物品',
+
+    'Marketplace for users': '用户市场。',
+    'Coming soon': '即将推出',
 };

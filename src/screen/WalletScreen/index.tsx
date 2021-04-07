@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import styled from 'styled-components';
 
 import { PRODUCT_CONTRACT } from '../../constant';
 import { Button, Modal, Order } from 'src/components';
+import Metamask from 'src/assets/metamask.svg';
 
 const ModalBody = styled.div`
     display: flex;
@@ -79,13 +79,43 @@ const WalletScreenWrapper = styled.div`
 `;
 
 const OrderWrapper = styled.div`
-    ${({ selected, index }) => selected === index && `box-shadow: inset 0 0 0 2px #5d63ff;`}
+    ${({ selected, index }) => selected === index && `outline: 2px solid #5d63ff;`}
 `;
 
 const FlexWrapper = styled.div`
     display: flex;
     grid-gap: 20px;
     margin-bottom: 30px;
+    padding-top: 3px;
+    flex-wrap: wrap;
+`;
+
+const MetaMaskContainer = styled.div`
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    button {
+        margin: auto;
+        cursor: pointer;
+        min-height: 50px;
+        line-height: 50px;
+        font-size: 20px;
+        min-width: 200px;
+        border-radius: 100px;
+        font-weight: bold;
+    }
+    > div:last-child {
+        display: flex;
+        grid-gap: 15px;
+    }
+    > div {
+        margin: auto;
+        cursor: pointer;
+        img {
+            min-width: 200px;
+            min-height: 200px;
+        }
+    }
 `;
 
 const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seaport }) => {
@@ -98,6 +128,7 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
     const [disabled, setDisabled] = useState<boolean>(false);
     const [amount, setAmount] = useState<string>(null);
     const [wrong, setWrong] = useState<boolean>(false);
+    const { ethereum } = window as any;
 
     useEffect(() => {
         if (seaport && account) {
@@ -173,6 +204,19 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
         setSelected(i);
     };
 
+    const handleEthereum = useCallback(async () => {
+        try {
+            if (ethereum) {
+                await ethereum.enable();
+            } else {
+                alert('Please install Metamask plugin');
+            }
+        } catch (e) {
+            alert('Login processing, please try again');
+            history.go(0);
+        }
+    }, [ethereum, history]);
+
     return (
         <React.Fragment>
             <WalletScreenWrapper>
@@ -180,25 +224,39 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
                 {!error ? (
                     loading ? (
                         <div>loading</div>
-                    ) : (
+                    ) : account?.length ? (
                         <div>
-                            <PerfectScrollbar>
-                                <FlexWrapper>
-                                    {assets?.map((asset: any, i: number) => (
-                                        <OrderWrapper index={i} key={i} selected={selected}>
-                                            <Order
-                                                key={i}
-                                                order={{ asset }}
-                                                seaport={seaport}
-                                                accountAddress={account}
-                                                onClick={() => handleSelected(i, asset)}
-                                            />
-                                        </OrderWrapper>
-                                    ))}
-                                </FlexWrapper>
-                            </PerfectScrollbar>
+                            <FlexWrapper>
+                                {assets?.map((asset: any, i: number) => (
+                                    <OrderWrapper index={i} key={i} selected={selected}>
+                                        <Order
+                                            key={i}
+                                            order={{ asset }}
+                                            seaport={seaport}
+                                            accountAddress={account}
+                                            onClick={() => handleSelected(i, asset)}
+                                        />
+                                    </OrderWrapper>
+                                ))}
+                            </FlexWrapper>
                             <ButtonWrapper>{handleSelectedButton()}</ButtonWrapper>
                         </div>
+                    ) : (
+                        <MetaMaskContainer>
+                            <div onClick={handleEthereum}>
+                                <img src={Metamask} alt="metamask" />
+                            </div>
+                            <div>
+                                <Button variant="primary" onClick={handleEthereum}>
+                                    Metamask Connect
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => window.open('https://metamask.io/download.html')}>
+                                    Download
+                                </Button>
+                            </div>
+                        </MetaMaskContainer>
                     )
                 ) : (
                     <div>error!</div>
@@ -221,7 +279,7 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
                                     onChange={handleInputChange}
                                     onBlur={handleInputChange}
                                 />
-                                <span>{selectedOrder?.sellOrders[0]?.paymentTokenContract?.symbol}</span>
+                                <span>{'ETH'}</span>
                             </div>
                         </ModalBody>
                     }

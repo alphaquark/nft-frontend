@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 import { changeLanguage, selectCurrentLanguage } from 'src/modules';
 import AQTLogo from 'src/assets/aqt.png';
 import MySvg from 'src/assets/myicon.svg';
+import { Modal } from '../Modal';
 
 const HeaderWrapper = styled.div`
     display: flex;
@@ -23,6 +24,7 @@ const HeaderWrapper = styled.div`
     img {
         max-width: 159px;
         max-height: 32px;
+        cursor: pointer;
     }
     > div:first-child {
         display: flex;
@@ -44,6 +46,7 @@ const HeaderWrapper = styled.div`
                     opacity: 0.5;
                     display: flex;
                     grid-gap: 24px;
+                    cursor: pointer;
                 }
             }
         }
@@ -90,6 +93,13 @@ const HeaderWrapper = styled.div`
     }
 `;
 
+const ModalBody = styled.div`
+    margin: auto;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+`;
+
 interface HeaderProps {
     background?: string;
 }
@@ -97,6 +107,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = () => {
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
+    const [modalState, setModalState] = useState(false);
     const dispatch = useDispatch();
     const { formatMessage } = useIntl();
 
@@ -107,46 +118,59 @@ export const Header: React.FC<HeaderProps> = () => {
     const currentLang = useSelector(selectCurrentLanguage);
 
     const handleLang = () => {
-        dispatch(changeLanguage(currentLang === 'en' ? 'zh' : 'en'));
+        dispatch(changeLanguage(currentLang === 'en' ? 'cn' : 'en'));
     };
 
     return (
-        <HeaderWrapper>
-            <div>
+        <React.Fragment>
+            <HeaderWrapper>
                 <div>
                     <div>
                         <div>
-                            <div onClick={handleLang}>{currentLang?.toUpperCase()}</div>
+                            <div>
+                                <div onClick={handleLang}>{currentLang?.toUpperCase()}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div onClick={() => history.push('/')}>
-                        <img src={AQTLogo} alt="aqt" />
-                    </div>
-                    <ul>
-                        <li onClick={() => history.push('/about')}>{formatMessage({ id: 'About' })}</li>
-                        <li onClick={() => history.push('/NFT')}>{formatMessage({ id: 'NFT' })}</li>
-                        <li onClick={() => history.push('/')}>{formatMessage({ id: 'IP-Fi' })}</li>
-                        <li onClick={() => history.push('/')}>{formatMessage({ id: 'MARKETPLACE' })}</li>
-                        <li>
-                            <div onClick={toggleState}>
-                                <img src={MySvg} alt="mySvg" />
-                            </div>
+                    <div>
+                        <div onClick={() => history.push('/')}>
+                            <img src={AQTLogo} alt="aqt" />
+                        </div>
+                        <ul>
+                            <li onClick={() => history.push('/about')}>{formatMessage({ id: 'About' })}</li>
+                            <li onClick={() => history.push('/NFT')}>{formatMessage({ id: 'NFT' })}</li>
+                            <li style={{ opacity: 0.5 }} onClick={() => setModalState(true)}>
+                                {formatMessage({ id: 'IP-Fi' })}
+                            </li>
+                            <li onClick={() => history.push('/market')}>{formatMessage({ id: 'MARKETPLACE' })}</li>
+                            <li>
+                                <div onClick={toggleState}>
+                                    <img src={MySvg} alt="mySvg" />
+                                </div>
 
-                            <div>
-                                {toggle && (
-                                    <React.Fragment>
-                                        <div onClick={() => history.push('/wallet')}>
-                                            {formatMessage({ id: 'MyItems' })}
-                                        </div>
-                                    </React.Fragment>
-                                )}
-                            </div>
-                        </li>
-                    </ul>
+                                <div>
+                                    {toggle && (
+                                        <React.Fragment>
+                                            <div onClick={() => history.push('/wallet')}>
+                                                {formatMessage({ id: 'MyItems' })}
+                                            </div>
+                                        </React.Fragment>
+                                    )}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </HeaderWrapper>
+            </HeaderWrapper>
+            {modalState && (
+                <Modal
+                    close={() => setModalState(false)}
+                    closeLabel="Coming soon"
+                    width={550}
+                    body={<ModalBody>IP-fi (Intellectual property backed Decentralized finance) Service</ModalBody>}
+                    useConfirm={true}
+                />
+            )}
+        </React.Fragment>
     );
 };

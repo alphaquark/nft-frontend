@@ -8,46 +8,15 @@ import { Footer, Header } from 'src/components';
 import { promisify } from 'src/constant';
 import { useSeaportFetch } from 'src/hooks';
 import { selectSeaport } from 'src/modules';
-import { OrderScreen, ProductScreen, WalletScreen, LandingScreen, AboutScreen } from 'src/screen';
-
-// const renderLoader = () => <div className="pg-loader-container">...</div>;
-
-// //tslint:disable-next-line no-any
-// const PrivateRoute: React.FC<any> = ({ component: CustomComponent, loading, isLogged, ...rest }) => {
-//     if (loading) {
-//         return renderLoader();
-//     }
-//     const renderCustomerComponent = (props) => <CustomComponent {...props} />;
-
-//     if (isLogged) {
-//         return <Route {...rest} render={renderCustomerComponent} />;
-//     }
-
-//     return (
-//         <Route {...rest}>
-//             <Redirect to={'/signin'} />
-//         </Route>
-//     );
-// };
-
-// //tslint:disable-next-line no-any
-// const PublicRoute: React.FC<any> = ({ component: CustomComponent, loading, isLogged, ...rest }) => {
-//     if (loading) {
-//         return renderLoader();
-//     }
-
-//     if (isLogged) {
-//         return (
-//             <Route {...rest}>
-//                 <Redirect to={'/'} />
-//             </Route>
-//         );
-//     }
-
-//     const renderCustomerComponent = (props) => <CustomComponent {...props} />;
-
-//     return <Route {...rest} render={renderCustomerComponent} />;
-// };
+import {
+    DefaultScreen,
+    OrderScreen,
+    ProductScreen,
+    WalletScreen,
+    LandingScreen,
+    AboutScreen,
+    MarketScreen,
+} from 'src/screen';
 
 const WrappedScreen = ({ component: Component, ...props }) => {
     const WrapperMarginScreen = styled.div`
@@ -55,7 +24,6 @@ const WrappedScreen = ({ component: Component, ...props }) => {
         margin: 0 auto;
         margin-top: 210px;
         flex: 1;
-        background: #171734;
     `;
     return (
         <React.Fragment>
@@ -78,8 +46,13 @@ export const Router: React.FC = () => {
 
     const handleEthereum = useCallback(async () => {
         try {
-            await ethereum.enable();
+            if (ethereum) {
+                await ethereum.enable();
+            } else {
+                alert('Please install Metamask plugins');
+            }
         } catch (e) {
+            alert('Login processing, please try again');
             history.go(0);
         }
     }, [ethereum, history]);
@@ -88,9 +61,14 @@ export const Router: React.FC = () => {
         if (seaport) {
             const asyncFunction = async () => {
                 try {
+                    let promise = promisify(seaport.web3.eth.getAccounts);
+                    let accounts: any = await promise;
+                    if (!accounts?.length) {
+                        throw new Error();
+                    }
                     await handleEthereum();
-                    const promise = promisify(seaport.web3.eth.getAccounts);
-                    const accounts: any = await promise;
+                    promise = promisify(seaport.web3.eth.getAccounts);
+                    accounts = await promise;
                     setAccount(accounts[0] || '');
                 } catch (e) {
                     console.error(e);
@@ -98,9 +76,9 @@ export const Router: React.FC = () => {
             };
             asyncFunction();
         }
-    }, [seaport, handleEthereum]);
+    }, [seaport, ethereum, handleEthereum]);
 
-    ethereum.on('accountsChanged', (accounts: any[]) => {
+    ethereum?.on('accountsChanged', (accounts: any[]) => {
         setAccount(accounts[0] || '');
     });
 
@@ -110,6 +88,8 @@ export const Router: React.FC = () => {
 
             <PrivateRoute path="/wallet" loading={loading} isLogged={Boolean(data?.me?.id)} component={WalletScreen} /> */}
             <Route exact={true} path="/" component={LandingScreen} />
+            <Route exact={true} path="/market" component={MarketScreen} />
+            <Route exact={true} path="/ip-fi" component={DefaultScreen} />
             <Route
                 path="/detail/:addreess/:id"
                 render={() => <WrappedScreen component={OrderScreen} account={account} seaport={seaport} />}

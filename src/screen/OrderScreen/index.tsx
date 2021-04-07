@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useLazyQuery } from '@apollo/client';
 import styled from 'styled-components';
 import { useLocation } from 'react-router';
 
 import { connectWallet, promisify, toUnitAmount } from 'src/constant';
-import { QUERY_SAMPLE } from 'src/gql';
 import { Button, Modal } from 'src/components';
 import ERC20 from 'src/abi/erc20.json';
+import { useAudioPlayer } from 'src/hooks';
+import Pause from 'src/assets/pause.svg';
+import Play from 'src/assets/play.svg';
 
 const ModalHeader = styled.div`
     color: black !important;
@@ -17,6 +18,38 @@ const ModalHeader = styled.div`
     line-height: 23px;
     * {
         color: black !important;
+    }
+`;
+
+const InfoItemWrapper = styled.div`
+    margin-top: 46px;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 16px;
+    > div:last-child {
+        background: #242448;
+        display: flex;
+        padding: 34px;
+        flex-wrap: wrap;
+        grid-gap: 15px;
+        > div {
+            display: flex;
+            min-width: calc(50% - 15px);
+            /* margin: auto; */
+            flex: 0;
+            > div:first-child {
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 19px;
+                color: #5d63ff;
+                min-width: 180px;
+            }
+            > div {
+                font-size: 14px;
+                line-height: 16px;
+                color: #ffffff;
+            }
+        }
     }
 `;
 
@@ -171,7 +204,48 @@ const BannerWrapper = styled.div`
     }
 `;
 
+const AudioWrapper = styled.div`
+    display: flex;
+    grid-gap: 12px;
+    margin-top: 12px;
+`;
+
+const AudioBar = styled.div`
+    max-height: 2px;
+    min-height: 2px;
+    background: #dedede;
+    flex: 1;
+    margin: auto;
+    position: relative;
+    > div {
+        left: 0;
+        background: #5d63ff;
+        height: 2px;
+    }
+`;
+
+const AudioController = styled.div`
+    display: flex;
+    grid-gap: 12px;
+
+    button {
+        min-height: 16px;
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+    button:first-child {
+        min-width: 16px;
+        background: url(${({ play }) => play});
+    }
+    button:last-child {
+        min-width: 16px;
+        background: url(${({ pause }) => pause});
+    }
+`;
+
 const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seaport }) => {
+    const { curTime, duration, playing, setPlaying, setClickedTime } = useAudioPlayer();
     const [orders, setOrders] = useState<any>(null);
     const [count, setCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
@@ -191,20 +265,9 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
 
     const location = useLocation();
 
-    const [call, { loading: queryLoading, data: queryData }] = useLazyQuery(QUERY_SAMPLE, {
-        variables: { assetContractAddress: path.assetContractAddress, tokenId: path.tokenId },
-    });
-
-    useEffect(() => {
-        if (!queryLoading) {
-            // console.log(queryData);
-        }
-    }, [queryData, queryLoading]);
-
     useEffect(() => {
         setPath({ assetContractAddress: location.pathname.split('/')[2], tokenId: location.pathname.split('/')[3] });
-        call();
-    }, [location, call]);
+    }, [location]);
 
     useEffect(() => {
         if (seaport && account && path.assetContractAddress && path.tokenId) {
@@ -278,6 +341,8 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
             setOrdering(false);
         }
     };
+    console.warn(curTime, duration, playing, setPlaying, setClickedTime);
+    console.warn(asset?.traits?.filter((e) => e.trait_type === 'preview-uri'));
 
     return (
         <OrderScreenWrapper>
@@ -316,7 +381,28 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                             <BannerWrapper>
                                 <div>
                                     <div>
-                                        <img src={asset?.imageUrl} alt={asset?.imageUrl} />
+                                        <div>
+                                            <img src={asset?.imageUrl} alt={asset?.imageUrl} />
+                                        </div>
+                                        <AudioWrapper>
+                                            <audio id="audio" autoPlay>
+                                                <source
+                                                    src={
+                                                        asset?.traits?.filter((e) => e.trait_type === 'preview-uri')[0][
+                                                            'value'
+                                                        ]
+                                                    }
+                                                />
+                                                Your browser does not support the <code>audio</code> element.
+                                            </audio>
+                                            <AudioController play={Play} pause={Pause}>
+                                                <button onClick={() => setPlaying(true)} />
+                                                <button onClick={() => setPlaying(false)} />
+                                            </AudioController>
+                                            <AudioBar>
+                                                <div style={{ width: `${(curTime / duration) * 100}%` }} />
+                                            </AudioBar>
+                                        </AudioWrapper>
                                     </div>
                                     <div>
                                         <div>{asset?.name}</div>
@@ -395,7 +481,7 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                                                 <div>
                                                     <div className="btnWrapper">
                                                         <Button variant={'secondary'} disabled={true}>
-                                                            CLOSED
+                                                            Sold out
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -409,6 +495,31 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                             <div>Information</div>
                             <div>{asset?.description}</div>
                         </InformationWrapper>
+                        <InfoItemWrapper>
+                            <div>NFT item info</div>
+                            <div>
+                                {asset?.traits?.map((e, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <div>{e.trait_type}</div>
+                                            <div>
+                                                {/^https?:\/\//.test(e.value) ? (
+                                                    e.trait_type !== 'source-uri' ? (
+                                                        <a href={e.value} target="_blank" rel="noreferrer">
+                                                            Link
+                                                        </a>
+                                                    ) : (
+                                                        'Link'
+                                                    )
+                                                ) : (
+                                                    e.value
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </InfoItemWrapper>
                         <HistoryWrapper>
                             <div>Trading History</div>
                             <div>
@@ -419,24 +530,7 @@ const OrderScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapor
                                     <div>To</div>
                                 </div>
                                 <div>
-                                    {queryData?.assetEvents?.edges.map(({ node }, i) => {
-                                        return (
-                                            <div key={`${node.id}${i}`}>
-                                                <div>{node?.eventType}</div>
-                                                <div>{node?.eventTimestamp}</div>
-                                                <div>
-                                                    {node?.fromAccount?.address === account
-                                                        ? 'you'
-                                                        : node?.fromAccount?.address?.slice(0, 8)}
-                                                </div>
-                                                <div>
-                                                    {node?.toAccount?.address === account
-                                                        ? 'you'
-                                                        : node?.toAccount?.address?.slice(0, 8)}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                    <div></div>
                                 </div>
                             </div>
                         </HistoryWrapper>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { normalize } from 'styled-normalize';
-import { createHttpLink, ApolloClient, from, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { createHttpLink, ApolloClient, from, InMemoryCache } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import { render } from 'react-dom';
@@ -43,17 +43,22 @@ export const GlobalStyle = createGlobalStyle`
 }
   ${normalize}
   html, body{
-    background: #171734;
     display:flex;
     flex-direction:column;
     flex:1;
-    width:100vw;
-    height:100vh;
+    width:100%;
+    height:100%;
+    background: #5122c4;
   }
   #root{
     display:flex;
     flex-direction:column;
     flex:1;
+    background: #5122c4;
+    -webkit-box-shadow: inset 0px -20px 500px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0px -20px 500px 20px rgba(0, 0, 0, 0.4);
+    background-position: center bottom;
+    background-repeat: no-repeat;
   }
   body > * {
     all: unset;
@@ -104,12 +109,12 @@ export const client = new ApolloClient({
 sagaMiddleware.run(rootSaga);
 
 render(
-    <ApolloProvider client={client}>
-        <Provider store={store}>
-            <GlobalStyle />
-            <App />
-        </Provider>
-    </ApolloProvider>,
+    // <ApolloProvider client={client}>
+    <Provider store={store}>
+        <GlobalStyle />
+        <App />
+    </Provider>,
+    // </ApolloProvider>,
     document.getElementById('root')
 );
 

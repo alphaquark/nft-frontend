@@ -1,5 +1,5 @@
 import { en } from './en';
-import { zh } from './zh';
+import { cn } from './cn';
 
 interface LangType {
     [key: string]: {
@@ -10,5 +10,5 @@ interface LangType {
 export const languageMap: LangType = {
     default: en,
     en,
-    zh,
+    cn,
 };

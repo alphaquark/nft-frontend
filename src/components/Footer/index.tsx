@@ -243,7 +243,6 @@ const MarqueeWrapper = styled.div`
 
 const FooterWrapper = styled.div`
     display: flex;
-    background: #151435;
     > div {
         margin: auto;
         padding-top: 82px;

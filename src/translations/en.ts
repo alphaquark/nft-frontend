@@ -1,7 +1,7 @@
 export const en = {
     About: 'About',
     NFT: 'NFT',
-    'iP-Fi': 'iP-Fi',
+    'IP-Fi': 'iP-Fi',
     MARKETPLACE: 'MARKETPLACE',
     MyItems: 'My Items',
     Settings: 'Settings',
@@ -11,7 +11,7 @@ export const en = {
     'Intellectual property, the most valuable asset in the world':
         'Intellectual property, the most valuable asset in the world',
     'about.content.01':
-        'We believe intellectual properties such as music copyright, movie copyright, writing copyright are purely valuable creativity of humanity. The artists, writers, creators are required to be respected emotionally, and economically, but it’s not easy. Wiprex iFi, the abbreviation of World Intellectual Property Right Exchange iFi, will make a change to make a better world for the artists, writers, creators.',
+        'We believe intellectual properties such as music copyright, movie copyright, writing copyright are purely valuable creativity of humanity. The artists, writers, creators are required to be respected emotionally, and economically, but it’s not easy. Alpha Quark will change the world to make a better place for artists, writers, creators.',
     'What is IP-fi?': 'What is IP-fi?',
     'about.content.02':
         'IP-fi represents NFT backed by Intellectual property, which use blockchain technology. By using blockchain technology, users can own and manage intellectual property as NFT You can buy NFT backed by intellectual property through Alpha Quark Token(AQT) and even you can stake and get royalty from the intellectual property that you bought.',
@@ -54,7 +54,7 @@ export const en = {
         'You can buy NFTized intellectual property by using Alpha Quark Token. Once you get NFT in Alpha Quark IP-fi, you will get royalty from the intellectual property.',
     'Do you want to learn more about Alpha Quark IP-fi?': 'Do you want to learn more about Alpha Quark IP-fi?',
 
-    'Get valuable NFT backed by intellectual property': 'Get valuable NFT backed by intellectual property',
+    'Get valuable NFT backed by intellectual property': 'Get valuable NFT\nbacked by intellectual property',
     'Music copyright': 'Music copyright',
     'product.content.01':
         '70 years after the death of the creator of music copyright, we have a right to get royalty from the copyright. Everytime we listen to music, we can earn money from the copyright. Once you stake UNI V2 LP Token in the staking pool of Alpha Quark IP-fi protocol, we will send you the royalty by using a smart contract.',
@@ -89,4 +89,10 @@ export const en = {
     'NFT backed by IP (Intellectual Property)': 'NFT backed by IP (Intellectual Property)',
     'Intellectual Property': 'Intellectual Property',
     'Right of Intellectual property backed NFT': 'Right of Intellectual property backed NFT',
+
+    'Where you can create your own NFT without coding, Where you can sell and buy NFT items':
+        'Where you can create your own NFT without coding,\nWhere you can sell and buy NFT items',
+
+    'Marketplace for users': 'Marketplace for users',
+    'Coming soon': 'Coming soon',
 };

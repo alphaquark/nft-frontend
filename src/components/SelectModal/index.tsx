@@ -1,16 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Button } from '..';
 import CROSS from 'src/assets/cross.svg';
-
-const ButtonWrapper = styled.div`
-    display: flex;
-    > * {
-        flex: 1;
-    }
-    grid-gap: 18px;
-`;
 
 const ContentWrapper = styled.div`
     display: flex;
@@ -70,32 +61,20 @@ const Shadow = styled.div`
     z-index: 1;
 `;
 
-export interface ModalProps {
+export interface SelectModalProps {
     header?: React.ReactNode;
     body?: React.ReactNode;
     submit?: any;
     submitLabel?: string;
     close: any;
-    closeLabel: string;
     width: number;
     buttonDisabled?: boolean;
     hiddenLabel?: boolean;
     useConfirm?: boolean;
 }
 
-export const Modal: React.FC<ModalProps> = React.memo(({ ...props }) => {
-    const {
-        submit,
-        close,
-        header,
-        body,
-        closeLabel,
-        submitLabel,
-        width,
-        buttonDisabled,
-        hiddenLabel,
-        useConfirm,
-    } = props;
+export const SelectModal: React.FC<SelectModalProps> = React.memo(({ ...props }) => {
+    const { close, header, body, width } = props;
     return (
         <React.Fragment>
             <ModalWrapper width={width}>
@@ -107,18 +86,6 @@ export const Modal: React.FC<ModalProps> = React.memo(({ ...props }) => {
                         <div>{header ? header : null}</div>
                         <div>{body ? body : null}</div>
                     </ContentWrapper>
-                    {!hiddenLabel && (
-                        <ButtonWrapper>
-                            <Button variant="secondary" onClick={close}>
-                                {closeLabel}
-                            </Button>
-                            {!useConfirm && (
-                                <Button disabled={buttonDisabled} variant="primary" onClick={submit}>
-                                    {submitLabel}
-                                </Button>
-                            )}
-                        </ButtonWrapper>
-                    )}
                 </div>
             </ModalWrapper>
             <Shadow onClick={close} />

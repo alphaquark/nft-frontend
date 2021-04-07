@@ -318,10 +318,10 @@ const InformationWrapper = styled.div`
 `;
 
 const AboutScreenWrapper = styled.div`
-    background: url(${(props) => props.bg}), linear-gradient(180deg, rgba(64, 38, 174, 1) 0%, rgba(21, 20, 53, 1) 100%);
-    background-size: 100% 940px, auto;
-    background-repeat: no-repeat, no-repeat;
-    background-position: top, center;
+    background: url(${(props) => props.bg});
+    background-size: 100% 940px;
+    background-repeat: no-repeat;
+    background-position: top;
     flex: 1;
 
     * {
