@@ -128,6 +128,8 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
     const [disabled, setDisabled] = useState<boolean>(false);
     const [amount, setAmount] = useState<string>(null);
     const [wrong, setWrong] = useState<boolean>(false);
+    const [paymentTokenId, setPaymentTokenID] = useState<any>(null);
+
     const { ethereum } = window as any;
 
     useEffect(() => {
@@ -191,6 +193,7 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
                 accountAddress: account,
                 startAmount: amount,
                 // expirationTime,
+                paymentTokenAddress: paymentTokenId,
             });
         } catch (e) {
         } finally {
@@ -199,9 +202,15 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
         }
     };
 
-    const handleSelected = (i, order) => {
-        setSelectedOrder(order);
-        setSelected(i);
+    const handleSelected = async (i, order) => {
+        try {
+            const { tokens } = await seaport.api.getPaymentTokens({ symbol: 'AQT' });
+            setPaymentTokenID(tokens[0]?.address);
+            setSelectedOrder(order);
+            setSelected(i);
+        } catch (e) {
+            console.warn(e);
+        }
     };
 
     const handleEthereum = useCallback(async () => {
@@ -273,7 +282,7 @@ const WalletScreen: React.FC<{ account: any; seaport: any }> = ({ account, seapo
                                     onChange={handleInputChange}
                                     onBlur={handleInputChange}
                                 />
-                                <span>{'ETH'}</span>
+                                <span>{paymentTokenId ? 'AQT' : 'ETH'}</span>
                             </div>
                         </ModalBody>
                     }

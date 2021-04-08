@@ -14,8 +14,8 @@ export const useSeaportFetch = (): void => {
             dispatch(
                 seaportData(
                     new OpenSeaPort(web3Provider, {
-                        networkName: Network.Rinkeby,
-                        apiKey: process.env.REACT_APP_API_KEY,
+                        networkName: Network[window?.env?.NETWORK ? window.env.NETWORK : 'Rinkeby'],
+                        apiKey: '11671121b01f4beb9317229a88785834',
                     })
                 )
             );

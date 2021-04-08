@@ -8,7 +8,7 @@ interface LangType {
 }
 
 export const languageMap: LangType = {
-    default: en,
+    default: cn,
     en,
     cn,
 };

@@ -2,13 +2,19 @@
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 
-export const PRODUCT_CONTRACT = process.env.REACT_APP_PRODUCT_CONTRACT;
+export const PRODUCT_CONTRACT = window?.env?.PRODUCT_CONTRACT
+    ? window.env.PRODUCT_CONTRACT
+    : '0xfeff46cb18203325da098a3c9dc3fd9642832230';
 
 export const DEFAULT_DECIMALS = 18;
 export const web3Provider =
     typeof (window as any).web3 !== 'undefined'
         ? (window as any).web3.currentProvider
-        : new Web3.providers.HttpProvider(process.env.REACT_APP_INFURA_URL);
+        : new Web3.providers.HttpProvider(
+              window?.env?.INFURA_URL
+                  ? window.env.INFURA_URL
+                  : 'https://rinkeby.infura.io/v3/6ae0876f5fbb40c4932fa32cf62d8af2'
+          );
 
 // Replace this with Redux for more complex logic
 const networkCallbacks = [];

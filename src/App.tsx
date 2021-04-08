@@ -14,6 +14,16 @@ const getTranslations = (lang: string) => {
     return languageMap[lang];
 };
 
+declare global {
+    interface Window {
+        env: {
+            NETWORK: string;
+            PRODUCT_CONTRACT: string;
+            INFURA_URL: string;
+        };
+    }
+}
+
 const App: React.FC = () => {
     const lang = useSelector(selectCurrentLanguage);
     return (
